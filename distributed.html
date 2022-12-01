@@ -36,6 +36,8 @@
   <link rel="stylesheet" href="_static/sg_gallery-rendered-html.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Reference" href="reference/index.html" />
+    <link rel="prev" title="Overview" href="overview.html" />
   <!-- Google Analytics -->
   
   <!-- End Google Analytics -->
@@ -234,8 +236,9 @@
             
             
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">TensorDict in distributed settings</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference/index.html">API Reference</a></li>
 </ul>
 
@@ -311,87 +314,82 @@
               
   <section id="tensordict-in-distributed-settings">
 <h1>TensorDict in distributed settings<a class="headerlink" href="#tensordict-in-distributed-settings" title="Permalink to this heading">¶</a></h1>
-<p>TensorDict can be used in distributed settings to pass tensors from one tensor
+<p>TensorDict can be used in distributed settings to pass tensors from one node
 to another.
 If two nodes have access to a shared physical storage, a memory-mapped tensor can
-be used to efficiently pass data from one process to another.
+be used to efficiently pass data from one running process to another.
 Here, we provide some details on how this can be achieved in a distributed RPC setting.
 For more details on distributed RPC, check the
 <a class="reference external" href="https://pytorch.org/docs/stable/rpc.html">official pytorch documentation</a>.</p>
 <section id="creating-a-memory-mapped-tensordict">
 <h2>Creating a memory-mapped TensorDict<a class="headerlink" href="#creating-a-memory-mapped-tensordict" title="Permalink to this heading">¶</a></h2>
 <p>Memory-mapped tensors (and arrays) have the great advantage that they can store
-a great amount of data and allow sub-indices to be accessed readily without
-reading the whole file in memory. TensorDict offers an interface between memory-mapped
+a great amount of data and allow slices of data to be accessed readily without
+reading the whole file in memory.
+TensorDict offers an interface between memory-mapped
 arrays and the <a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v1.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.Tensor</span></code></a> class named <code class="xref py py-obj docutils literal notranslate"><span class="pre">MemmapTensor</span></code>.
-<code class="xref py py-obj docutils literal notranslate"><span class="pre">MemmapTensor</span></code> instances can be stored in <code class="xref py py-obj docutils literal notranslate"><span class="pre">TensorDict</span></code>, allowing a
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">MemmapTensor</span></code> instances can be stored in <code class="xref py py-obj docutils literal notranslate"><span class="pre">TensorDict</span></code> objects, allowing a
 tensordict to represent a big dataset, stored on disk, easily accessible in a
-batch way across nodes.</p>
+batched way across nodes.</p>
 <p>A memory-mapped tensordict is simply created via (1) populating a TensorDict with
 memory-mapped tensors or (2) by calling <code class="xref py py-obj docutils literal notranslate"><span class="pre">tensordict.memmap_()</span></code> to put it on
 physical storage.
 One can easily check that a tensordict is put on physical storage by querying
 <cite>tensordict.is_memmap()</cite>.</p>
 <p>Creating a memory-mapped tensor can itself be done in several ways.
-First, one can simply create an empty tensor:</p>
-<div class="literal-block-wrapper docutils container" id="id3">
-<div class="code-block-caption"><span class="caption-text">Creating an empty memory-mapped tensor
-&gt;&gt;&gt; shape = torch.Size([3, 4, 5])
-&gt;&gt;&gt; tensor = Memmaptensor(<a href="#id1"><span class="problematic" id="id2">*</span></a>shape, prefix=”/tmp”)</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+Firstly, one can simply create an empty tensor:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shape</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Size</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tensor</span> <span class="o">=</span> <span class="n">Memmaptensor</span><span class="p">(</span><span class="o">*</span><span class="n">shape</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;/tmp&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tensor</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 </pre></div>
-</div>
 </div>
 <p>The <code class="xref py py-obj docutils literal notranslate"><span class="pre">prefix</span></code> attribute indicates where the temporary file has to be stored.
 It is crucial that the tensor is stored in a directory that is accessible to every
 node!</p>
 <p>Another option is to represent an existing tensor on disk:</p>
-<div class="literal-block-wrapper docutils container" id="id4">
-<div class="code-block-caption"><span class="caption-text">Creating a memory-mapped tensor from an existing one
-&gt;&gt;&gt; tensor = torch.randn(3)
-&gt;&gt;&gt; tensor = Memmaptensor(tensor, prefix=”/tmp”)</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tensor</span> <span class="o">=</span> <span class="n">Memmaptensor</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;/tmp&quot;</span><span class="p">)</span>
 </pre></div>
-</div>
 </div>
 <p>The former method will be preferred when tensors are big or do not fit in memory:
 it is suitable for tensors that are extremely big and serve as common storage
 across nodes. For instance, one could create a dataset that would be easily accessed
 by a single or different nodes, much faster than it would be if each file had to be
 loaded independently in memory:</p>
-<div class="literal-block-wrapper docutils container" id="id5">
-<div class="code-block-caption"><span class="caption-text">Creating an empty dataset on disk
-&gt;&gt;&gt; dataset = TensorDict({
-…      “images”: MemmapTensor(50000, 480, 480, 3),
-…      “masks”: MemmapTensor(50000, 480, 480, 3, dtype=torch.bool),
-…      “labels”: MemmapTensor(50000, 1, dtype=torch.uint8),
-… }, batch_size=[50000], device=”cpu”)
-&gt;&gt;&gt; idx = [1, 5020, 34572, 11200]
-&gt;&gt;&gt; batch = dataset[idx].clone()
-TensorDict(
-    fields={
-        images: Tensor(torch.Size([4, 480, 480, 3]), dtype=torch.float32),
-        labels: Tensor(torch.Size([4, 1]), dtype=torch.uint8),
-        masks: Tensor(torch.Size([4, 480, 480, 3]), dtype=torch.bool)},
-    batch_size=torch.Size([4]),
-    device=cpu,
-    is_shared=False)</span><a class="headerlink" href="#id5" title="Permalink to this code">¶</a></div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">Creating an empty dataset on disk</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dataset</span> <span class="o">=</span> <span class="n">TensorDict</span><span class="p">({</span>
+<span class="gp">... </span>     <span class="s2">&quot;images&quot;</span><span class="p">:</span> <span class="n">MemmapTensor</span><span class="p">(</span><span class="mi">50000</span><span class="p">,</span> <span class="mi">480</span><span class="p">,</span> <span class="mi">480</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+<span class="gp">... </span>     <span class="s2">&quot;masks&quot;</span><span class="p">:</span> <span class="n">MemmapTensor</span><span class="p">(</span><span class="mi">50000</span><span class="p">,</span> <span class="mi">480</span><span class="p">,</span> <span class="mi">480</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">bool</span><span class="p">),</span>
+<span class="gp">... </span>     <span class="s2">&quot;labels&quot;</span><span class="p">:</span> <span class="n">MemmapTensor</span><span class="p">(</span><span class="mi">50000</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">},</span> <span class="n">batch_size</span><span class="o">=</span><span class="p">[</span><span class="mi">50000</span><span class="p">],</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5020</span><span class="p">,</span> <span class="mi">34572</span><span class="p">,</span> <span class="mi">11200</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">batch</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+<span class="go">TensorDict(</span>
+<span class="go">    fields={</span>
+<span class="go">        images: Tensor(torch.Size([4, 480, 480, 3]), dtype=torch.float32),</span>
+<span class="go">        labels: Tensor(torch.Size([4, 1]), dtype=torch.uint8),</span>
+<span class="go">        masks: Tensor(torch.Size([4, 480, 480, 3]), dtype=torch.bool)},</span>
+<span class="go">    batch_size=torch.Size([4]),</span>
+<span class="go">    device=cpu,</span>
+<span class="go">    is_shared=False)</span>
 </pre></div>
 </div>
 </div>
 <p>Notice that we have indicated the device of the <code class="xref py py-obj docutils literal notranslate"><span class="pre">MemmapTensor</span></code>.
 This syntax sugar allows for the tensors that are queried to be directly loaded
 on device if needed.</p>
+<p>Another consideration to take into account is that currently <code class="xref py py-obj docutils literal notranslate"><span class="pre">MemmapTensor</span></code>
+is not compatible with autograd operations.</p>
 </section>
 <section id="operating-on-memory-mapped-tensors-across-nodes">
 <h2>Operating on Memory-mapped tensors across nodes<a class="headerlink" href="#operating-on-memory-mapped-tensors-across-nodes" title="Permalink to this heading">¶</a></h2>
 <p>We provide a simple example of a distributed script where one process creates a
-memory-mapped tensors, and sends its reference to another worker that is responsible of
+memory-mapped tensor, and sends its reference to another worker that is responsible of
 updating it. You will find this example in the
-<a href="#id9"><span class="problematic" id="id10">`benchmark directory.&lt;https://github.com/pytorch-labs/tensordict/tree/main/benchmarks/distributed_benchmark.py&gt;`_</span></a>.</p>
-<p>In short, our goal is to show how to handle a read and write operations on big
-tensors when nodes can access a shared physical storage. The steps involve:</p>
+<a class="reference external" href="https://github.com/pytorch-labs/tensordict/tree/main/benchmarks/distributed_benchmark.py">benchmark directory</a>.</p>
+<p>In short, our goal is to show how to handle read and write operations on big
+tensors when nodes have access to a shared physical storage. The steps involve:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>Creating the empty tensor on disk;</p></li>
@@ -402,48 +400,41 @@ shared data.</p></li>
 </div></blockquote>
 <p>This example first writes a function that updates a TensorDict instance
 at specific indices with a one-filled tensor:</p>
-<div class="literal-block-wrapper docutils container" id="id6">
-<div class="code-block-caption"><span class="caption-text">The filling function
-&gt;&gt;&gt; def fill_tensordict(tensordict, idx):
-…     tensordict[idx] = TensorDict(
-…         {“memmap”: torch.ones(5, 640, 640, 3, dtype=torch.uint8)}, [5]
-…     )
-…     return tensordict
-&gt;&gt;&gt; fill_tensordict_cp = CloudpickleWrapper(fill_tensordict)</span><a class="headerlink" href="#id6" title="Permalink to this code">¶</a></div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">fill_tensordict</span><span class="p">(</span><span class="n">tensordict</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">tensordict</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">TensorDict</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="p">{</span><span class="s2">&quot;memmap&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">640</span><span class="p">,</span> <span class="mi">640</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">uint8</span><span class="p">)},</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">tensordict</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fill_tensordict_cp</span> <span class="o">=</span> <span class="n">CloudpickleWrapper</span><span class="p">(</span><span class="n">fill_tensordict</span><span class="p">)</span>
 </pre></div>
-</div>
 </div>
 <p>The <code class="xref py py-obj docutils literal notranslate"><span class="pre">CloudpickleWrapper</span></code> ensures that the function is serializable.
 Next, we create a tensordict of a considerable size, to make the point that
 this would be hard to pass from worker to worker if it had to be passed through
 a regular tensorpipe:</p>
-<div class="literal-block-wrapper docutils container" id="id7">
-<div class="code-block-caption"><span class="caption-text">The filling function
-&gt;&gt;&gt;         tensordict = TensorDict(
-…     {“memmap”: MemmapTensor(1000, 640, 640, 3, dtype=torch.uint8, prefix=”/tmp/”)}, [1000]
-… )</span><a class="headerlink" href="#id7" title="Permalink to this code">¶</a></div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tensordict</span> <span class="o">=</span> <span class="n">TensorDict</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">{</span><span class="s2">&quot;memmap&quot;</span><span class="p">:</span> <span class="n">MemmapTensor</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">640</span><span class="p">,</span> <span class="mi">640</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">uint8</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;/tmp/&quot;</span><span class="p">)},</span> <span class="p">[</span><span class="mi">1000</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
 </pre></div>
-</div>
 </div>
 <p>Finally, still on the main node, we call the function <em>on the remote node</em> and then
 check that the data has been written where needed:</p>
-<div class="literal-block-wrapper docutils container" id="id8">
-<div class="code-block-caption"><span class="caption-text">The filling function
-&gt;&gt;&gt; idx = [4, 5, 6, 7, 998]
-&gt;&gt;&gt; t0 = time.time()
-&gt;&gt;&gt; out = rpc.rpc_sync(
-…     worker_info,
-…     fill_tensordict_cp,
-…     args=(tensordict, idx),
-… )
-&gt;&gt;&gt; print(“time elapsed:”, time.time() - t0)
-&gt;&gt;&gt; print(“check all ones”, out[“memmap”][idx, :1, :1, :1].clone())</span><a class="headerlink" href="#id8" title="Permalink to this code">¶</a></div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">998</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">rpc</span><span class="o">.</span><span class="n">rpc_sync</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">worker_info</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">fill_tensordict_cp</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">tensordict</span><span class="p">,</span> <span class="n">idx</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;time elapsed:&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;check all ones&quot;</span><span class="p">,</span> <span class="n">out</span><span class="p">[</span><span class="s2">&quot;memmap&quot;</span><span class="p">][</span><span class="n">idx</span><span class="p">,</span> <span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">clone</span><span class="p">())</span>
 </pre></div>
 </div>
-</div>
+<p>Although the call to <code class="xref py py-obj docutils literal notranslate"><span class="pre">rpc.rpc_sync</span></code> involved passing the entire tensordict,
+updating specific indices of this object and return it to the original worker,
+the execution of this snippet is extremely fast (even more so if the reference
+to the memory location is already passed beforehand, see <a href="#id2"><span class="problematic" id="id3">`torchrl's distributed
+replay buffer documentation&lt;https://github.com/pytorch/rl/blob/main/examples/distributed/distributed_replay_buffer.py&gt;`_</span></a> to learn more).</p>
 <p>The script contains additional RPC configuration steps that are beyond the
 purpose of this document.</p>
 </section>
@@ -454,6 +445,15 @@ purpose of this document.</p>
              
             </div>
             <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="reference/index.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <img src="_static/images/chevron-right-orange.svg" class="next-page"></a>
+      
+      
+        <a href="overview.html" class="btn btn-neutral" title="Overview" accesskey="p" rel="prev"><img src="_static/images/chevron-right-orange.svg" class="previous-page"> Previous</a>
+      
+    </div>
   
 
   
