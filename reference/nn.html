@@ -316,6 +316,179 @@
               
   <section id="tensordict-nn-package">
 <h1>tensordict.nn package<a class="headerlink" href="#tensordict-nn-package" title="Permalink to this heading">¶</a></h1>
+<p>The tensordict.nn package makes it possible to flexibly use TensorDict within
+ML pipelines.</p>
+<p>Since TensorDict turns parts of one’s code to a key-based structure, it is now
+possible to build complex graph structures using these keys as hooks.
+The basic building block is <a class="reference internal" href="generated/tensordict.nn.TensorDictModule.html#tensordict.nn.TensorDictModule" title="tensordict.nn.TensorDictModule"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TensorDictModule</span></code></a>, which wraps an <code class="xref py py-obj docutils literal notranslate"><span class="pre">nn.Module</span></code>
+instance with a list of input and output keys:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">Transformer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tensordict</span> <span class="kn">import</span> <span class="n">TensorDict</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tensordict.nn</span> <span class="kn">import</span> <span class="n">TensorDictModule</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">module</span> <span class="o">=</span> <span class="n">TensorDictModule</span><span class="p">(</span><span class="n">Transformer</span><span class="p">(),</span> <span class="n">in_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;feature&quot;</span><span class="p">,</span> <span class="s2">&quot;target&quot;</span><span class="p">],</span> <span class="n">out_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;prediction&quot;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">TensorDict</span><span class="p">({</span><span class="s2">&quot;feature&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span> <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">512</span><span class="p">)},</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">module</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="go">TensorDict(</span>
+<span class="go">    fields={</span>
+<span class="go">        feature: Tensor(torch.Size([10, 11, 512]), dtype=torch.float32),</span>
+<span class="go">        prediction: Tensor(torch.Size([10, 11, 512]), dtype=torch.float32),</span>
+<span class="go">        target: Tensor(torch.Size([10, 11, 512]), dtype=torch.float32)},</span>
+<span class="go">    batch_size=torch.Size([10, 11]),</span>
+<span class="go">    device=None,</span>
+<span class="go">    is_shared=False)</span>
+</pre></div>
+</div>
+<p>One does not necessarily need to use <a class="reference internal" href="generated/tensordict.nn.TensorDictModule.html#tensordict.nn.TensorDictModule" title="tensordict.nn.TensorDictModule"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TensorDictModule</span></code></a>, a custom <code class="xref py py-obj docutils literal notranslate"><span class="pre">nn.Module</span></code>
+with an ordered list of input and output keys (named <code class="xref py py-obj docutils literal notranslate"><span class="pre">module.in_keys</span></code> and
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">module.out_keys</span></code>) will suffice.</p>
+<p>A key pain-point of multiple PyTorch users is the inability of nn.Sequential to
+handle modules with multiple inputs. Working with key-based graphs can easily
+solve that problem as each node in the sequence knows what data needs to be
+read and where to write it.</p>
+<p>For this purpose, we provide the TensorDictSequential class which passes data
+through a sequence of TensorDictModules. Each module in the sequence takes its
+input from, and writes its output to the original TensorDict, meaning it’s possible
+for modules in the sequence to ignore output from their predecessors, or take
+additional input from the tensordict as necessary. Here’s an example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tensordict.nn</span> <span class="kn">import</span> <span class="n">TensorDictSequential</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Net</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">hidden_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">output_size</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Masker</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mask</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">mask</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">net</span> <span class="o">=</span> <span class="n">TensorDictModule</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">Net</span><span class="p">(),</span> <span class="n">in_keys</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;input&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">)],</span> <span class="n">out_keys</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;intermediate&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">)]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">masker</span> <span class="o">=</span> <span class="n">TensorDictModule</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">Masker</span><span class="p">(),</span>
+<span class="gp">... </span>    <span class="n">in_keys</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;intermediate&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;input&quot;</span><span class="p">,</span> <span class="s2">&quot;mask&quot;</span><span class="p">)],</span>
+<span class="gp">... </span>    <span class="n">out_keys</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;output&quot;</span><span class="p">,</span> <span class="s2">&quot;probabilities&quot;</span><span class="p">)],</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">module</span> <span class="o">=</span> <span class="n">TensorDictSequential</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">masker</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">td</span> <span class="o">=</span> <span class="n">TensorDict</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">{</span>
+<span class="gp">... </span>        <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="n">TensorDict</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="s2">&quot;mask&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">10</span><span class="p">))},</span>
+<span class="gp">... </span>            <span class="n">batch_size</span><span class="o">=</span><span class="p">[</span><span class="mi">32</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">)</span>
+<span class="gp">... </span>    <span class="p">},</span>
+<span class="gp">... </span>    <span class="n">batch_size</span><span class="o">=</span><span class="p">[</span><span class="mi">32</span><span class="p">],</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">td</span> <span class="o">=</span> <span class="n">module</span><span class="p">(</span><span class="n">td</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">td</span><span class="p">)</span>
+<span class="go">TensorDict(</span>
+<span class="go">    fields={</span>
+<span class="go">        input: TensorDict(</span>
+<span class="go">            fields={</span>
+<span class="go">                mask: Tensor(torch.Size([32, 10]), dtype=torch.int64),</span>
+<span class="go">                x: Tensor(torch.Size([32, 100]), dtype=torch.float32)},</span>
+<span class="go">            batch_size=torch.Size([32]),</span>
+<span class="go">            device=None,</span>
+<span class="go">            is_shared=False),</span>
+<span class="go">        intermediate: TensorDict(</span>
+<span class="go">            fields={</span>
+<span class="go">                x: Tensor(torch.Size([32, 10]), dtype=torch.float32)},</span>
+<span class="go">            batch_size=torch.Size([32]),</span>
+<span class="go">            device=None,</span>
+<span class="go">            is_shared=False),</span>
+<span class="go">        output: TensorDict(</span>
+<span class="go">            fields={</span>
+<span class="go">                probabilities: Tensor(torch.Size([32, 10]), dtype=torch.float32)},</span>
+<span class="go">            batch_size=torch.Size([32]),</span>
+<span class="go">            device=None,</span>
+<span class="go">            is_shared=False)},</span>
+<span class="go">    batch_size=torch.Size([32]),</span>
+<span class="go">    device=None,</span>
+<span class="go">    is_shared=False)</span>
+</pre></div>
+</div>
+<p>We can also select sub-graphs easily throught the <code class="xref py py-obj docutils literal notranslate"><span class="pre">TensorDictSequential.select_subsequence(in_keys,</span> <span class="pre">out_keys)</span></code> method:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sub_module</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">select_subsequence</span><span class="p">(</span><span class="n">out_keys</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;intermediate&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">td</span> <span class="o">=</span> <span class="n">TensorDict</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">{</span>
+<span class="gp">... </span>        <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="n">TensorDict</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="s2">&quot;mask&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">10</span><span class="p">))},</span>
+<span class="gp">... </span>            <span class="n">batch_size</span><span class="o">=</span><span class="p">[</span><span class="mi">32</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">)</span>
+<span class="gp">... </span>    <span class="p">},</span>
+<span class="gp">... </span>    <span class="n">batch_size</span><span class="o">=</span><span class="p">[</span><span class="mi">32</span><span class="p">],</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sub_module</span><span class="p">(</span><span class="n">td</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">td</span><span class="p">)</span>  <span class="c1"># the &quot;output&quot; has not been computed</span>
+<span class="go">TensorDict(</span>
+<span class="go">    fields={</span>
+<span class="go">        input: TensorDict(</span>
+<span class="go">            fields={</span>
+<span class="go">                mask: Tensor(torch.Size([32, 10]), dtype=torch.int64),</span>
+<span class="go">                x: Tensor(torch.Size([32, 100]), dtype=torch.float32)},</span>
+<span class="go">            batch_size=torch.Size([32]),</span>
+<span class="go">            device=None,</span>
+<span class="go">            is_shared=False),</span>
+<span class="go">        intermediate: TensorDict(</span>
+<span class="go">            fields={</span>
+<span class="go">                x: Tensor(torch.Size([32, 10]), dtype=torch.float32)},</span>
+<span class="go">            batch_size=torch.Size([32]),</span>
+<span class="go">            device=None,</span>
+<span class="go">            is_shared=False)},</span>
+<span class="go">    batch_size=torch.Size([32]),</span>
+<span class="go">    device=None,</span>
+<span class="go">    is_shared=False)</span>
+</pre></div>
+</div>
+<p>Finally, tensordict.nn comes with a <a class="reference internal" href="generated/tensordict.nn.ProbabilisticTensorDictModule.html#tensordict.nn.ProbabilisticTensorDictModule" title="tensordict.nn.ProbabilisticTensorDictModule"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ProbabilisticTensorDictModule</span></code></a> that allows
+to build distributions from network outputs and get summary statistics or samples from it
+(along with the distribution parameters):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tensordict</span> <span class="kn">import</span> <span class="n">TensorDict</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tensordict.nn</span> <span class="kn">import</span> <span class="n">TensorDictModule</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tensordict.nn.distributions</span> <span class="kn">import</span> <span class="n">NormalParamWrapper</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tensordict.nn.functional_modules</span> <span class="kn">import</span> <span class="n">make_functional</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tensordict.nn.prototype</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="n">ProbabilisticTensorDictModule</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">ProbabilisticTensorDictSequential</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">torch.distributions</span> <span class="kn">import</span> <span class="n">Normal</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">td</span> <span class="o">=</span> <span class="n">TensorDict</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">{</span><span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">&quot;hidden&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">)},</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">net</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">GRUCell</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">module</span> <span class="o">=</span> <span class="n">TensorDictModule</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">NormalParamWrapper</span><span class="p">(</span><span class="n">net</span><span class="p">),</span> <span class="n">in_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;input&quot;</span><span class="p">,</span> <span class="s2">&quot;hidden&quot;</span><span class="p">],</span> <span class="n">out_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;loc&quot;</span><span class="p">,</span> <span class="s2">&quot;scale&quot;</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prob_module</span> <span class="o">=</span> <span class="n">ProbabilisticTensorDictModule</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">in_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;loc&quot;</span><span class="p">,</span> <span class="s2">&quot;scale&quot;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">out_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sample&quot;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">distribution_class</span><span class="o">=</span><span class="n">Normal</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">return_log_prob</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">td_module</span> <span class="o">=</span> <span class="n">ProbabilisticTensorDictSequential</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">prob_module</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">td_module</span><span class="p">(</span><span class="n">td</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">td</span><span class="p">)</span>
+<span class="go">TensorDict(</span>
+<span class="go">    fields={</span>
+<span class="go">        action: Tensor(torch.Size([3, 4]), dtype=torch.float32),</span>
+<span class="go">        hidden: Tensor(torch.Size([3, 8]), dtype=torch.float32),</span>
+<span class="go">        input: Tensor(torch.Size([3, 4]), dtype=torch.float32),</span>
+<span class="go">        loc: Tensor(torch.Size([3, 4]), dtype=torch.float32),</span>
+<span class="go">        sample_log_prob: Tensor(torch.Size([3, 4]), dtype=torch.float32),</span>
+<span class="go">        scale: Tensor(torch.Size([3, 4]), dtype=torch.float32)},</span>
+<span class="go">    batch_size=torch.Size([3]),</span>
+<span class="go">    device=None,</span>
+<span class="go">    is_shared=False)</span>
+</pre></div>
+</div>
 <table class="autosummary longtable docutils # Necessary for the table generated by autosummary to look decent align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/tensordict.nn.TensorDictModule.html#tensordict.nn.TensorDictModule" title="tensordict.nn.TensorDictModule"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TensorDictModule</span></code></a>(module, in_keys, out_keys)</p></td>
@@ -332,10 +505,68 @@
 </tr>
 </tbody>
 </table>
+<section id="functional">
+<h2>Functional<a class="headerlink" href="#functional" title="Permalink to this heading">¶</a></h2>
+<p>The tensordict package is compatible with most functorch capabilities.
+We also provide a dedicated functional API that leverages the advantages of
+tensordict to handle parameters in functional programs.</p>
+<p>The <a class="reference internal" href="generated/tensordict.nn.make_functional.html#tensordict.nn.make_functional" title="tensordict.nn.make_functional"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_functional</span></code></a> method will turn a module in a functional module. The
+module will be modified in-place and a <code class="xref py py-obj docutils literal notranslate"><span class="pre">TensorDict</span></code> containing the module
+parameters will be returned. This tensordict has a structure that reflects exactly
+the structure of the model. In the following example, we show that</p>
+<ol class="arabic simple">
+<li><p><a class="reference internal" href="generated/tensordict.nn.make_functional.html#tensordict.nn.make_functional" title="tensordict.nn.make_functional"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_functional</span></code></a> extracts the parameters of the module;</p></li>
+<li><p>These parameters have a structure that matches exactly the structure of the
+model (though they can be flattened using <code class="xref py py-obj docutils literal notranslate"><span class="pre">params.flatten_keys(&quot;.&quot;)</span></code>).</p></li>
+<li><p>It converts the module and all its sub-modules to be functional.</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tensordict</span> <span class="kn">import</span> <span class="n">TensorDict</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tensordict.nn</span> <span class="kn">import</span> <span class="n">make_functional</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">functorch</span> <span class="kn">import</span> <span class="n">vmap</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">layer1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">layer2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">layer1</span><span class="p">,</span> <span class="n">layer2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">make_functional</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>  <span class="c1"># params is the last arg (or kwarg)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">intermediate</span> <span class="o">=</span> <span class="n">model</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">x</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;0&quot;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out2</span> <span class="o">=</span> <span class="n">model</span><span class="p">[</span><span class="mi">1</span><span class="p">](</span><span class="n">intermediate</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;1&quot;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">torch</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_close</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">out2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Alternatively, parameters can also be constructed using the following methods:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">TensorDict</span><span class="p">({</span><span class="n">name</span><span class="p">:</span> <span class="n">param</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">()},</span> <span class="p">[])</span><span class="o">.</span><span class="n">unflatten_keys</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">TensorDict</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="p">[])</span>  <span class="c1"># provided that the state_dict() just returns params and buffer tensors</span>
+</pre></div>
+</div>
+<p>Unlike what is done with functorch, <a class="reference internal" href="generated/tensordict.nn.make_functional.html#tensordict.nn.make_functional" title="tensordict.nn.make_functional"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tensordict.nn.make_functional</span></code></a> does not
+distinguish on a high level parameters and buffers (they are all packed together).</p>
+<table class="autosummary longtable docutils # Necessary for the table generated by autosummary to look decent align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/tensordict.nn.get_functional.html#tensordict.nn.get_functional" title="tensordict.nn.get_functional"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_functional</span></code></a>(module[, funs_to_decorate])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/tensordict.nn.make_functional.html#tensordict.nn.make_functional" title="tensordict.nn.make_functional"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_functional</span></code></a>(module[, funs_to_decorate])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/tensordict.nn.repopulate_module.html#tensordict.nn.repopulate_module" title="tensordict.nn.repopulate_module"><code class="xref py py-obj docutils literal notranslate"><span class="pre">repopulate_module</span></code></a>(model, tensordict)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="utils">
 <h2>Utils<a class="headerlink" href="#utils" title="Permalink to this heading">¶</a></h2>
 <table class="autosummary longtable docutils # Necessary for the table generated by autosummary to look decent align-default">
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/tensordict.nn.dispatch_kwargs.html#tensordict.nn.dispatch_kwargs" title="tensordict.nn.dispatch_kwargs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dispatch_kwargs</span></code></a>(func)</p></td>
+<td><p>Allows for a function expecting a TensorDict to be called using kwargs.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/tensordict.nn.set_interaction_mode.html#tensordict.nn.set_interaction_mode" title="tensordict.nn.set_interaction_mode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_interaction_mode</span></code></a>([mode])</p></td>
+<td><p>Sets the sampling mode of all ProbabilisticTDModules to the desired mode.</p></td>
+</tr>
 </tbody>
 </table>
 </section>
@@ -385,6 +616,7 @@
             <div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
               <ul>
 <li><a class="reference internal" href="#">tensordict.nn package</a><ul>
+<li><a class="reference internal" href="#functional">Functional</a></li>
 <li><a class="reference internal" href="#utils">Utils</a></li>
 </ul>
 </li>

@@ -10,7 +10,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Welcome to the TensorDict Documentation! &mdash; tensordict main documentation</title>
+  <title>tensordict.nn.make_functional &mdash; tensordict main documentation</title>
   
 
   
@@ -26,33 +26,34 @@
 
   
 
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!-- <link rel="stylesheet" href="_static/pygments.css" type="text/css" /> -->
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/sg_gallery.css" type="text/css" />
-  <link rel="stylesheet" href="_static/sg_gallery-binder.css" type="text/css" />
-  <link rel="stylesheet" href="_static/sg_gallery-dataframe.css" type="text/css" />
-  <link rel="stylesheet" href="_static/sg_gallery-rendered-html.css" type="text/css" />
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Overview" href="overview.html" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!-- <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" /> -->
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="tensordict.nn.repopulate_module" href="tensordict.nn.repopulate_module.html" />
+    <link rel="prev" title="tensordict.nn.get_functional" href="tensordict.nn.get_functional.html" />
   <!-- Google Analytics -->
   
   <!-- End Google Analytics -->
   
 
   
-  <script src="_static/js/modernizr.min.js"></script>
+  <script src="../../_static/js/modernizr.min.js"></script>
 
   <!-- Preload the theme fonts -->
 
-<link rel="preload" href="_static/fonts/FreightSans/freight-sans-book.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="_static/fonts/FreightSans/freight-sans-medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="_static/fonts/FreightSans/freight-sans-bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="_static/fonts/FreightSans/freight-sans-medium-italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../_static/fonts/FreightSans/freight-sans-book.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../_static/fonts/FreightSans/freight-sans-medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../_static/fonts/FreightSans/freight-sans-bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../_static/fonts/FreightSans/freight-sans-medium-italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../../_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
 
 <!-- Preload the katex fonts -->
 
@@ -219,7 +220,7 @@
 
 
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search Docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -235,10 +236,10 @@
             
             
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="distributed.html">TensorDict in distributed settings</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference/index.html">API Reference</a></li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../distributed.html">TensorDict in distributed settings</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API Reference</a></li>
 </ul>
 
             
@@ -271,7 +272,7 @@
   <ul class="pytorch-breadcrumbs">
     
       <li>
-        <a href="#">
+        <a href="../../index.html">
           
             Docs
           
@@ -279,13 +280,17 @@
       </li>
 
         
-      <li>Welcome to the TensorDict Documentation!</li>
+          <li><a href="../index.html">API Reference</a> &gt;</li>
+        
+          <li><a href="../nn.html">tensordict.nn package</a> &gt;</li>
+        
+      <li>tensordict.nn.make_functional</li>
     
     
       <li class="pytorch-breadcrumbs-aside">
         
             
-            <a href="_sources/index.rst.txt" rel="nofollow"><img src="_static/images/view-page-source-icon.svg"></a>
+            <a href="../../_sources/reference/generated/tensordict.nn.make_functional.rst.txt" rel="nofollow"><img src="../../_static/images/view-page-source-icon.svg"></a>
           
         
       </li>
@@ -311,71 +316,13 @@
             <div role="main" class="main-content" itemscope="itemscope" itemtype="http://schema.org/Article">
              <article itemprop="articleBody" id="pytorch-article" class="pytorch-article">
               
-  <section id="welcome-to-the-tensordict-documentation">
-<h1>Welcome to the TensorDict Documentation!<a class="headerlink" href="#welcome-to-the-tensordict-documentation" title="Permalink to this heading">¶</a></h1>
-<p><cite>TensorDict</cite> is a dictionary-like class that inherits properties from tensors, such as indexing, shape operations, casting to device etc.</p>
-<p>The main purpose of TensorDict is to make code-bases more <em>readable</em> and <em>modular</em> by abstracting away tailored operations:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tensordict</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="c1"># the model reads and writes tensordicts</span>
-<span class="gp">... </span>    <span class="n">tensordict</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">tensordict</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_module</span><span class="p">(</span><span class="n">tensordict</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
-<span class="gp">... </span>    <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
-<span class="gp">... </span>    <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>With this level of abstraction, one can recycle a training loop for highly heterogeneous task.
-Each individual step of the training loop (data collection and transform, model prediction, loss computation etc.)
-can be tailored to the use case at hand without impacting the others.
-For instance, the above example can be easily used across classification and segmentation tasks, among many others.</p>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#motivation">Motivation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#features">Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#nested-tensordicts">Nested TensorDicts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#lazy-evaluation">Lazy evaluation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#lazy-pre-allocation">Lazy pre-allocation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#tensordictmodule">TensorDictModule</a></li>
-<li class="toctree-l2"><a class="reference internal" href="overview.html#functional-programming">Functional Programming</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="distributed.html">TensorDict in distributed settings</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="distributed.html#creating-a-memory-mapped-tensordict">Creating a memory-mapped TensorDict</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distributed.html#operating-on-memory-mapped-tensors-across-nodes">Operating on Memory-mapped tensors across nodes</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="reference/index.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reference/tensordict.html">tensordict package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="reference/generated/tensordict.TensorDict.html">TensorDict</a></li>
-<li class="toctree-l3"><a class="reference internal" href="reference/generated/tensordict.SubTensorDict.html">SubTensorDict</a></li>
-<li class="toctree-l3"><a class="reference internal" href="reference/generated/tensordict.LazyStackedTensorDict.html">LazyStackedTensorDict</a></li>
-<li class="toctree-l3"><a class="reference internal" href="reference/tensordict.html#utils">Utils</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="reference/nn.html">tensordict.nn package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="reference/generated/tensordict.nn.TensorDictModule.html">TensorDictModule</a></li>
-<li class="toctree-l3"><a class="reference internal" href="reference/generated/tensordict.nn.ProbabilisticTensorDictModule.html">ProbabilisticTensorDictModule</a></li>
-<li class="toctree-l3"><a class="reference internal" href="reference/generated/tensordict.nn.TensorDictSequential.html">TensorDictSequential</a></li>
-<li class="toctree-l3"><a class="reference internal" href="reference/generated/tensordict.nn.TensorDictModuleWrapper.html">TensorDictModuleWrapper</a></li>
-<li class="toctree-l3"><a class="reference internal" href="reference/nn.html#functional">Functional</a></li>
-<li class="toctree-l3"><a class="reference internal" href="reference/nn.html#utils">Utils</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="reference/prototype.html">tensorclass prototype</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</section>
-<section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading">¶</a></h1>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
+  <section id="tensordict-nn-make-functional">
+<h1>tensordict.nn.make_functional<a class="headerlink" href="#tensordict-nn-make-functional" title="Permalink to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="tensordict.nn.make_functional">
+<span class="sig-prename descclassname"><span class="pre">tensordict.nn.</span></span><span class="sig-name descname"><span class="pre">make_functional</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">funs_to_decorate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tensordict.nn.make_functional" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -386,8 +333,10 @@ For instance, the above example can be easily used across classification and seg
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="overview.html" class="btn btn-neutral float-right" title="Overview" accesskey="n" rel="next">Next <img src="_static/images/chevron-right-orange.svg" class="next-page"></a>
+        <a href="tensordict.nn.repopulate_module.html" class="btn btn-neutral float-right" title="tensordict.nn.repopulate_module" accesskey="n" rel="next">Next <img src="../../_static/images/chevron-right-orange.svg" class="next-page"></a>
       
+      
+        <a href="tensordict.nn.get_functional.html" class="btn btn-neutral" title="tensordict.nn.get_functional" accesskey="p" rel="prev"><img src="../../_static/images/chevron-right-orange.svg" class="previous-page"> Previous</a>
       
     </div>
   
@@ -419,8 +368,10 @@ For instance, the above example can be easily used across classification and seg
           <div class="pytorch-right-menu" id="pytorch-right-menu">
             <div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
               <ul>
-<li><a class="reference internal" href="#">Welcome to the TensorDict Documentation!</a></li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+<li><a class="reference internal" href="#">tensordict.nn.make_functional</a><ul>
+<li><a class="reference internal" href="#tensordict.nn.make_functional"><code class="docutils literal notranslate"><span class="pre">make_functional()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
             </div>
@@ -435,21 +386,21 @@ For instance, the above example can be easily used across classification and seg
   
 
      
-       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-         <script src="_static/jquery.js"></script>
-         <script src="_static/underscore.js"></script>
-         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-         <script src="_static/doctools.js"></script>
-         <script src="_static/sphinx_highlight.js"></script>
+       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+         <script src="../../_static/jquery.js"></script>
+         <script src="../../_static/underscore.js"></script>
+         <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+         <script src="../../_static/doctools.js"></script>
+         <script src="../../_static/sphinx_highlight.js"></script>
      
 
   
 
-  <script type="text/javascript" src="_static/js/vendor/popper.min.js"></script>
-  <script type="text/javascript" src="_static/js/vendor/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/vendor/popper.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/vendor/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-  <script type="text/javascript" src="_static/js/theme.js"></script>
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
   <script type="text/javascript">
       jQuery(function () {
@@ -554,7 +505,7 @@ For instance, the above example can be easily used across classification and seg
   <div class="cookie-banner-wrapper">
   <div class="container">
     <p class="gdpr-notice">To analyze traffic and optimize your experience, we serve cookies on this site. By clicking or navigating, you agree to allow our usage of cookies. As the current maintainers of this site, Facebook’s Cookies Policy applies. Learn more, including about available controls: <a href="https://www.facebook.com/policies/cookies/">Cookies Policy</a>.</p>
-    <img class="close-button" src="_static/images/pytorch-x.svg">
+    <img class="close-button" src="../../_static/images/pytorch-x.svg">
   </div>
 </div>
 
@@ -690,7 +641,7 @@ For instance, the above example can be easily used across classification and seg
 
   <!-- End Mobile Menu -->
 
-  <script type="text/javascript" src="_static/js/vendor/anchor.min.js"></script>
+  <script type="text/javascript" src="../../_static/js/vendor/anchor.min.js"></script>
 
   <script type="text/javascript">
     $(document).ready(function() {
