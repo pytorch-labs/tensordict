@@ -320,80 +320,96 @@
 <h1>ProbabilisticTensorDictModule<a class="headerlink" href="#probabilistictensordictmodule" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="tensordict.nn.ProbabilisticTensorDictModule">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tensordict.nn.</span></span><span class="sig-name descname"><span class="pre">ProbabilisticTensorDictModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">module:</span> <span class="pre">~tensordict.nn.common.TensorDictModule,</span> <span class="pre">dist_in_keys:</span> <span class="pre">~typing.Union[str,</span> <span class="pre">~typing.Sequence[str],</span> <span class="pre">dict],</span> <span class="pre">sample_out_key:</span> <span class="pre">~typing.Union[str,</span> <span class="pre">~typing.Sequence[str]],</span> <span class="pre">default_interaction_mode:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'mode',</span> <span class="pre">distribution_class:</span> <span class="pre">~typing.Type</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'tensordict.nn.distributions.continuous.Delta'&gt;,</span> <span class="pre">distribution_kwargs:</span> <span class="pre">~typing.Optional[dict]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">return_log_prob:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">cache_dist:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">n_empirical_estimate:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1000</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tensordict.nn.ProbabilisticTensorDictModule" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tensordict.nn.</span></span><span class="sig-name descname"><span class="pre">ProbabilisticTensorDictModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">in_keys:</span> <span class="pre">~typing.Union[str,</span> <span class="pre">~typing.Sequence[str],</span> <span class="pre">dict],</span> <span class="pre">out_keys:</span> <span class="pre">~typing.Optional[~typing.Union[str,</span> <span class="pre">~typing.Sequence[str]]]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">default_interaction_mode:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'mode',</span> <span class="pre">distribution_class:</span> <span class="pre">~typing.Type</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'tensordict.nn.distributions.continuous.Delta'&gt;,</span> <span class="pre">distribution_kwargs:</span> <span class="pre">~typing.Optional[dict]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">return_log_prob:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">cache_dist:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">n_empirical_estimate:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1000</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tensordict.nn.ProbabilisticTensorDictModule" title="Permalink to this definition">¶</a></dt>
 <dd><p>A probabilistic TD Module.</p>
-<p><cite>ProbabilisticTensorDictModule</cite> is a special case of a TensorDictModule where the
-output is sampled given some rule, specified by the input <code class="xref py py-obj docutils literal notranslate"><span class="pre">default_interaction_mode</span></code>
-argument and the <code class="xref py py-obj docutils literal notranslate"><span class="pre">interaction_mode()</span></code> global function.</p>
-<p>It consists in a wrapper around another TDModule that returns a tensordict
-updated with the distribution parameters. <a class="reference internal" href="#tensordict.nn.ProbabilisticTensorDictModule" title="tensordict.nn.ProbabilisticTensorDictModule"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ProbabilisticTensorDictModule</span></code></a> is
-responsible for constructing the distribution (through the <code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dist()</span></code> method)
-and/or sampling from this distribution (through a regular <code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__()</span></code> to the
-module).</p>
+<p><cite>ProbabilisticTensorDictModule</cite> is a non-parametric module representing a
+probability distribution. It reads the distribution parameters from an input
+TensorDict using the specified <cite>in_keys</cite>. The output is sampled given some rule,
+specified by the input <code class="xref py py-obj docutils literal notranslate"><span class="pre">default_interaction_mode</span></code> argument and the
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">interaction_mode()</span></code> global function.</p>
+<p><a class="reference internal" href="#tensordict.nn.ProbabilisticTensorDictModule" title="tensordict.nn.ProbabilisticTensorDictModule"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ProbabilisticTensorDictModule</span></code></a> can be used to construct the distribution
+(through the <code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dist()</span></code> method) and/or sampling from this distribution
+(through a regular <code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__()</span></code> to the module).</p>
 <p>A <a class="reference internal" href="#tensordict.nn.ProbabilisticTensorDictModule" title="tensordict.nn.ProbabilisticTensorDictModule"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ProbabilisticTensorDictModule</span></code></a> instance has two main features:
 - It reads and writes TensorDict objects
 - It uses a real mapping R^n -&gt; R^m to create a distribution in R^d from
-which values can be sampled or computed.
-When the <code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code> / <a class="reference internal" href="#tensordict.nn.ProbabilisticTensorDictModule.forward" title="tensordict.nn.ProbabilisticTensorDictModule.forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward</span></code></a> method is called, a distribution is created,
-and a value computed (using the ‘mean’, ‘mode’, ‘median’ attribute or
-the ‘rsample’, ‘sample’ method). The sampling step is skipped if the
-inner TDModule has already created the desired key-value pair.</p>
+which values can be sampled or computed.</p>
+<p>When the <code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code> / <a class="reference internal" href="#tensordict.nn.ProbabilisticTensorDictModule.forward" title="tensordict.nn.ProbabilisticTensorDictModule.forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward</span></code></a> method is called, a distribution is
+created, and a value computed (using the ‘mean’, ‘mode’, ‘median’ attribute or
+the ‘rsample’, ‘sample’ method). The sampling step is skipped if the supplied
+TensorDict has all of the desired key-value pairs already.</p>
 <p>By default, ProbabilisticTensorDictModule distribution class is a Delta
 distribution, making ProbabilisticTensorDictModule a simple wrapper around
 a deterministic mapping function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>module</strong> (<em>nn.Module</em>) – a nn.Module used to map the input to the output parameter space. Can be a functional
-module (FunctionalModule or FunctionalModuleWithBuffers), in which case the <a class="reference internal" href="#tensordict.nn.ProbabilisticTensorDictModule.forward" title="tensordict.nn.ProbabilisticTensorDictModule.forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward</span></code></a> method will expect
-the params (and possibly) buffers keyword arguments.</p></li>
-<li><p><strong>dist_in_keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><em>iterable</em><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – key(s) that will be produced
-by the inner TDModule and that will be used to build the distribution.
-Importantly, if it’s an iterable of string or a string, those keys must match the keywords used by the distribution
-class of interest, e.g. <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;loc&quot;</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;scale&quot;</span></code> for the Normal distribution
-and similar. If dist_in_keys is a dictionary,, the keys are the keys of the distribution and the values are the
-keys in the tensordict that will get match to the corresponding distribution keys.</p></li>
-<li><p><strong>sample_out_key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><em>iterable</em><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – keys where the sampled values will be
-written. Importantly, if this key is part of the <code class="xref py py-obj docutils literal notranslate"><span class="pre">out_keys</span></code> of the inner model,
-the sampling step will be skipped.</p></li>
-<li><p><strong>default_interaction_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>optional</em>) – default method to be used to retrieve the output value. Should be one of:
-‘mode’, ‘median’, ‘mean’ or ‘random’ (in which case the value is sampled randomly from the distribution).
-Default is ‘mode’.
-Note: When a sample is drawn, the <code class="xref py py-obj docutils literal notranslate"><span class="pre">ProbabilisticTDModule</span></code> instance will fist look for the interaction mode
-dictated by the <cite>interaction_mode()</cite> global function. If this returns <cite>None</cite> (its default value),
-then the <cite>default_interaction_mode</cite> of the <cite>ProbabilisticTDModule</cite> instance will be used.
-Note that DataCollector instances will use <cite>set_interaction_mode</cite> to <cite>“random”</cite> by default.</p></li>
-<li><p><strong>distribution_class</strong> (<em>Type</em><em>, </em><em>optional</em>) – a torch.distributions.Distribution class to be used for sampling.
-Default is Delta.</p></li>
+<li><p><strong>in_keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><em>iterable</em><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – key(s) that will be read from the
+input TensorDict and used to build the distribution. Importantly, if it’s an
+iterable of string or a string, those keys must match the keywords used by
+the distribution class of interest, e.g. <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;loc&quot;</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;scale&quot;</span></code> for
+the Normal distribution and similar. If in_keys is a dictionary,, the keys
+are the keys of the distribution and the values are the keys in the
+tensordict that will get match to the corresponding distribution keys.</p></li>
+<li><p><strong>out_keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em> or </em><em>iterable</em><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – keys where the sampled values will be
+written. Importantly, if these keys are found in the input TensorDict, the
+sampling step will be skipped.</p></li>
+<li><p><strong>default_interaction_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>optional</em>) – default method to be used to retrieve
+the output value. Should be one of: ‘mode’, ‘median’, ‘mean’ or ‘random’
+(in which case the value is sampled randomly from the distribution). Default
+is ‘mode’.
+Note: When a sample is drawn, the <code class="xref py py-obj docutils literal notranslate"><span class="pre">ProbabilisticTDModule</span></code> instance will
+fist look for the interaction mode dictated by the <cite>interaction_mode()</cite>
+global function. If this returns <cite>None</cite> (its default value), then the
+<cite>default_interaction_mode</cite> of the <cite>ProbabilisticTDModule</cite> instance will be
+used. Note that DataCollector instances will use <cite>set_interaction_mode</cite> to
+<cite>“random”</cite> by default.</p></li>
+<li><p><strong>distribution_class</strong> (<em>Type</em><em>, </em><em>optional</em>) – a torch.distributions.Distribution class to
+be used for sampling. Default is Delta.</p></li>
 <li><p><strong>distribution_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>, </em><em>optional</em>) – kwargs to be passed to the distribution.</p></li>
-<li><p><strong>return_log_prob</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – if True, the log-probability of the distribution sample will be written in the
-tensordict with the key <cite>f’{in_keys[0]}_log_prob’</cite>. Default is <cite>False</cite>.</p></li>
-<li><p><strong>cache_dist</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – EXPERIMENTAL: if True, the parameters of the distribution (i.e. the output of the module)
-will be written to the tensordict along with the sample. Those parameters can be used to
-re-compute the original distribution later on (e.g. to compute the divergence between the distribution
-used to sample the action and the updated distribution in PPO).
-Default is <cite>False</cite>.</p></li>
-<li><p><strong>n_empirical_estimate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>optional</em>) – number of samples to compute the empirical mean when it is not available.
-Default is 1000</p></li>
+<li><p><strong>return_log_prob</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – if True, the log-probability of the
+distribution sample will be written in the tensordict with the key
+<cite>‘sample_log_prob’</cite>. Default is <cite>False</cite>.</p></li>
+<li><p><strong>cache_dist</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>, </em><em>optional</em>) – EXPERIMENTAL: if True, the parameters of the
+distribution (i.e. the output of the module) will be written to the
+tensordict along with the sample. Those parameters can be used to re-compute
+the original distribution later on (e.g. to compute the divergence between
+the distribution used to sample the action and the updated distribution in
+PPO). Default is <cite>False</cite>.</p></li>
+<li><p><strong>n_empirical_estimate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>optional</em>) – number of samples to compute the empirical
+mean when it is not available. Default is 1000</p></li>
 </ul>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tensordict</span> <span class="kn">import</span> <span class="n">TensorDict</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tensordict.nn</span> <span class="kn">import</span> <span class="n">ProbabilisticTensorDictModule</span><span class="p">,</span> <span class="n">TensorDictModule</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tensordict.nn.distributions</span> <span class="kn">import</span> <span class="n">NormalParamWrapper</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tensordict.nn</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="n">ProbabilisticTensorDictModule</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">ProbabilisticTensorDictSequential</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">TensorDictModule</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tensordict.nn.distributions</span> <span class="kn">import</span> <span class="n">NormalParamExtractor</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tensordict.nn.functional_modules</span> <span class="kn">import</span> <span class="n">make_functional</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">torch.distributions</span> <span class="kn">import</span> <span class="n">Normal</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">td</span> <span class="o">=</span> <span class="n">TensorDict</span><span class="p">({</span><span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">&quot;hidden&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">)},</span> <span class="p">[</span><span class="mi">3</span><span class="p">,])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">net</span> <span class="o">=</span> <span class="n">NormalParamWrapper</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">GRUCell</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">module</span> <span class="o">=</span> <span class="n">TensorDictModule</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">in_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;input&quot;</span><span class="p">,</span> <span class="s2">&quot;hidden&quot;</span><span class="p">],</span> <span class="n">out_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;loc&quot;</span><span class="p">,</span> <span class="s2">&quot;scale&quot;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">td_module</span> <span class="o">=</span> <span class="n">ProbabilisticTensorDictModule</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">module</span><span class="o">=</span><span class="n">module</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">dist_in_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;loc&quot;</span><span class="p">,</span> <span class="s2">&quot;scale&quot;</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="n">sample_out_key</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">],</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">td</span> <span class="o">=</span> <span class="n">TensorDict</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">{</span><span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">&quot;hidden&quot;</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">)},</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">net</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">GRUCell</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">module</span> <span class="o">=</span> <span class="n">TensorDictModule</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">net</span><span class="p">,</span> <span class="n">in_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;input&quot;</span><span class="p">,</span> <span class="s2">&quot;hidden&quot;</span><span class="p">],</span> <span class="n">out_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">normal_params</span> <span class="o">=</span> <span class="n">TensorDictModule</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">NormalParamExtractor</span><span class="p">(),</span> <span class="n">in_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">],</span> <span class="n">out_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;loc&quot;</span><span class="p">,</span> <span class="s2">&quot;scale&quot;</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prob_module</span> <span class="o">=</span> <span class="n">ProbabilisticTensorDictModule</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">in_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;loc&quot;</span><span class="p">,</span> <span class="s2">&quot;scale&quot;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">out_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;action&quot;</span><span class="p">],</span>
 <span class="gp">... </span>    <span class="n">distribution_class</span><span class="o">=</span><span class="n">Normal</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">return_log_prob</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">td_module</span> <span class="o">=</span> <span class="n">ProbabilisticTensorDictSequential</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">module</span><span class="p">,</span> <span class="n">normal_params</span><span class="p">,</span> <span class="n">prob_module</span>
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">make_functional</span><span class="p">(</span><span class="n">td_module</span><span class="p">,</span> <span class="n">funs_to_decorate</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;forward&quot;</span><span class="p">,</span> <span class="s2">&quot;get_dist&quot;</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">td_module</span><span class="p">(</span><span class="n">td</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
@@ -404,17 +420,16 @@ Default is 1000</p></li>
 <span class="go">        hidden: Tensor(torch.Size([3, 8]), dtype=torch.float32),</span>
 <span class="go">        input: Tensor(torch.Size([3, 4]), dtype=torch.float32),</span>
 <span class="go">        loc: Tensor(torch.Size([3, 4]), dtype=torch.float32),</span>
+<span class="go">        params: Tensor(torch.Size([3, 8]), dtype=torch.float32),</span>
 <span class="go">        sample_log_prob: Tensor(torch.Size([3, 4]), dtype=torch.float32),</span>
 <span class="go">        scale: Tensor(torch.Size([3, 4]), dtype=torch.float32)},</span>
 <span class="go">    batch_size=torch.Size([3]),</span>
 <span class="go">    device=None,</span>
 <span class="go">    is_shared=False)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">dist</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">td_module</span><span class="o">.</span><span class="n">get_dist</span><span class="p">(</span><span class="n">td</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dist</span> <span class="o">=</span> <span class="n">td_module</span><span class="o">.</span><span class="n">get_dist</span><span class="p">(</span><span class="n">td</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
 <span class="go">Normal(loc: torch.Size([3, 4]), scale: torch.Size([3, 4]))</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># we can also apply the module to the TensorDict with vmap</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># we can also apply the module to the TensorDict with vmap</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">functorch</span> <span class="kn">import</span> <span class="n">vmap</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">td_vmap</span> <span class="o">=</span> <span class="n">vmap</span><span class="p">(</span><span class="n">td_module</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">))(</span><span class="n">td</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
@@ -425,6 +440,7 @@ Default is 1000</p></li>
 <span class="go">        hidden: Tensor(torch.Size([4, 3, 8]), dtype=torch.float32),</span>
 <span class="go">        input: Tensor(torch.Size([4, 3, 4]), dtype=torch.float32),</span>
 <span class="go">        loc: Tensor(torch.Size([4, 3, 4]), dtype=torch.float32),</span>
+<span class="go">        params: Tensor(torch.Size([4, 3, 8]), dtype=torch.float32),</span>
 <span class="go">        sample_log_prob: Tensor(torch.Size([4, 3, 4]), dtype=torch.float32),</span>
 <span class="go">        scale: Tensor(torch.Size([4, 3, 4]), dtype=torch.float32)},</span>
 <span class="go">    batch_size=torch.Size([4, 3]),</span>
@@ -434,8 +450,16 @@ Default is 1000</p></li>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="tensordict.nn.ProbabilisticTensorDictModule.forward">
-<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensordict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TensorDictBase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tensordict_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">TensorDictBase</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">TensorDictBase</span></span></span><a class="headerlink" href="#tensordict.nn.ProbabilisticTensorDictModule.forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>When the tensordict parameter is not set, kwargs are used to create an instance of TensorDict.</p>
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensordict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TensorDictBase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tensordict_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">TensorDictBase</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_requires_sample</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">TensorDictBase</span></span></span><a class="headerlink" href="#tensordict.nn.ProbabilisticTensorDictModule.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
 </dd></dl>
 
 </dd></dl>
