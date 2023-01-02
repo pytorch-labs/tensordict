@@ -27,8 +27,6 @@ from tensordict.tensordict import LazyStackedTensorDict, TensorDictBase
 from tensordict.utils import _normalize_key, NESTED_KEY
 from torch import nn
 
-__all__ = ["TensorDictSequential"]
-
 
 class TensorDictSequential(TensorDictModule):
     """A sequence of TensorDictModules.
