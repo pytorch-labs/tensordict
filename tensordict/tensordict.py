@@ -137,6 +137,7 @@ class _TensorDictKeysView:
         self.tensordict = tensordict
         self.include_nested = include_nested
         self.leaves_only = leaves_only
+        self.loop_set = set()
 
     def __iter__(self):
         if not self.include_nested:
@@ -153,12 +154,13 @@ class _TensorDictKeysView:
 
     def _iter_helper(self, tensordict, prefix=None):
         items_iter = self._items(tensordict)
-
+        self.loop_set.add(id(tensordict))
         for key, value in items_iter:
             full_key = self._combine_keys(prefix, key)
             if (
                 isinstance(value, (TensorDictBase, KeyedJaggedTensor))
                 and self.include_nested
+                and id(value) not in self.loop_set
             ):
                 subkeys = tuple(
                     self._iter_helper(
@@ -169,6 +171,7 @@ class _TensorDictKeysView:
                 yield from subkeys
             if not (isinstance(value, TensorDictBase) and self.leaves_only):
                 yield full_key
+        self.loop_set.remove(id(tensordict))
 
     def _combine_keys(self, prefix, key):
         if prefix is not None:
@@ -270,6 +273,8 @@ class TensorDictBase(Mapping, metaclass=abc.ABCMeta):
 
     def __init__(self):
         self._dict_meta = KeyDependentDefaultDict(self._make_meta)
+        self._being_repr = False
+        self._being_flattened = False
 
     @abc.abstractmethod
     def _make_meta(self, key: str) -> MetaTensor:
@@ -1722,7 +1727,13 @@ class TensorDictBase(Mapping, metaclass=abc.ABCMeta):
         )
 
     def __repr__(self) -> str:
-        fields = _td_fields(self)
+        if self._being_repr:
+            return "Auto-nested"
+        try:
+            self._being_repr = True
+            fields = _td_fields(self)
+        finally:
+            self._being_repr = False
         field_str = indent(f"fields={{{fields}}}", 4 * " ")
         batch_size_str = indent(f"batch_size={self.batch_size}", 4 * " ")
         device_str = indent(f"device={self.device}", 4 * " ")
@@ -1796,50 +1807,61 @@ class TensorDictBase(Mapping, metaclass=abc.ABCMeta):
     def flatten_keys(
         self, separator: str = ".", inplace: bool = False
     ) -> TensorDictBase:
-        to_flatten = []
-        existing_keys = self.keys(include_nested=True)
-        for key, meta_value in self.items_meta():
-            key_split = tuple(key.split(separator))
-            if meta_value.is_tensordict():
-                to_flatten.append(key)
-            elif (
-                separator in key
-                and key_split in existing_keys
-                and not self._get_meta(key_split).is_tensordict()
-            ):
-                raise KeyError(
-                    f"Flattening keys in tensordict collides with existing key '{key}'"
-                )
-
-        if inplace:
-            for key in to_flatten:
-                inner_tensordict = self.get(key).flatten_keys(
-                    separator=separator, inplace=inplace
-                )
-                for inner_key, inner_item in inner_tensordict.items():
-                    self.set(separator.join([key, inner_key]), inner_item)
-            for key in to_flatten:
-                del self[key]
+        if self._being_flattened:
             return self
-        else:
-            tensordict_out = TensorDict(
-                {},
-                batch_size=self.batch_size,
-                device=self.device,
-                _run_checks=False,
-                _is_shared=self.is_shared(),
-                _is_memmap=self.is_memmap(),
-            )
-            for key, value in self.items():
-                if key in to_flatten:
+        try:
+            self._being_flattened = True
+            to_flatten = []
+            existing_keys = self.keys(include_nested=True)
+            for key, meta_value in self.items_meta():
+                key_split = tuple(key.split(separator))
+                if meta_value.is_tensordict():
+                    to_flatten.append(key)
+                elif (
+                    separator in key
+                    and key_split in existing_keys
+                    and not self._get_meta(key_split).is_tensordict()
+                ):
+                    raise KeyError(
+                        f"Flattening keys in tensordict collides with existing key '{key}'"
+                    )
+
+            if inplace:
+                for key in to_flatten:
                     inner_tensordict = self.get(key).flatten_keys(
                         separator=separator, inplace=inplace
                     )
                     for inner_key, inner_item in inner_tensordict.items():
-                        tensordict_out.set(separator.join([key, inner_key]), inner_item)
-                else:
-                    tensordict_out.set(key, value)
-            return tensordict_out
+                        self.set(separator.join([key, inner_key]), inner_item)
+                for key in to_flatten:
+                    del self[key]
+                self._being_flattened = False
+                return self
+            else:
+                tensordict_out = TensorDict(
+                    {},
+                    batch_size=self.batch_size,
+                    device=self.device,
+                    _run_checks=False,
+                    _is_shared=self.is_shared(),
+                    _is_memmap=self.is_memmap(),
+                )
+                for key, value in self.items():
+                    if key in to_flatten:
+                        inner_tensordict = self.get(key).flatten_keys(
+                            separator=separator, inplace=inplace
+                        )
+                        if inner_tensordict is not self.get(key):
+                            for inner_key, inner_item in inner_tensordict.items():
+                                tensordict_out.set(
+                                    separator.join([key, inner_key]), inner_item
+                                )
+                    else:
+                        tensordict_out.set(key, value)
+                self._being_flattened = False
+                return tensordict_out
+        finally:
+            self._being_flattened = False
 
     def unflatten_keys(
         self, separator: str = ".", inplace: bool = False
@@ -4751,6 +4773,7 @@ class SavedTensorDict(TensorDictBase):
         device: Optional[torch.device] = None,
         batch_size: Optional[Sequence[int]] = None,
     ):
+        super().__init__()
         if not isinstance(source, TensorDictBase):
             raise TypeError(
                 f"Expected source to be a TensorDictBase instance, but got {type(source)} instead."
