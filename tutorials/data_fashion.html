@@ -10,7 +10,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>DataLoaders &mdash; tensordict main documentation</title>
+  <title>Using TensorDict for datasets &mdash; tensordict main documentation</title>
   
 
   
@@ -26,32 +26,34 @@
 
   
 
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <!-- <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" /> -->
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!-- <link rel="stylesheet" href="../_static/pygments.css" type="text/css" /> -->
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Overview" href="../overview.html" />
+    <link rel="prev" title="Welcome to the TensorDict Documentation!" href="../index.html" />
   <!-- Google Analytics -->
   
   <!-- End Google Analytics -->
   
 
   
-  <script src="../../_static/js/modernizr.min.js"></script>
+  <script src="../_static/js/modernizr.min.js"></script>
 
   <!-- Preload the theme fonts -->
 
-<link rel="preload" href="../../_static/fonts/FreightSans/freight-sans-book.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="../../_static/fonts/FreightSans/freight-sans-medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="../../_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="../../_static/fonts/FreightSans/freight-sans-bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="../../_static/fonts/FreightSans/freight-sans-medium-italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="../../_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/FreightSans/freight-sans-book.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/FreightSans/freight-sans-medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/IBMPlexMono/IBMPlexMono-Medium.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/FreightSans/freight-sans-bold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/FreightSans/freight-sans-medium-italic.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="../_static/fonts/IBMPlexMono/IBMPlexMono-SemiBold.woff2" as="font" type="font/woff2" crossorigin="anonymous">
 
 <!-- Preload the katex fonts -->
 
@@ -218,7 +220,7 @@
 
 
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search Docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -233,10 +235,13 @@
               
             
             
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../distributed.html">TensorDict in distributed settings</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../reference/index.html">API Reference</a></li>
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Using TensorDict for datasets</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../distributed.html">TensorDict in distributed settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">API Reference</a></li>
 </ul>
 
             
@@ -269,7 +274,7 @@
   <ul class="pytorch-breadcrumbs">
     
       <li>
-        <a href="../../index.html">
+        <a href="../index.html">
           
             Docs
           
@@ -277,13 +282,13 @@
       </li>
 
         
-      <li>DataLoaders</li>
+      <li>Using TensorDict for datasets</li>
     
     
       <li class="pytorch-breadcrumbs-aside">
         
             
-            <a href="../../_sources/tutorials/media/tensordict_dataset_fashionmnist.rst.txt" rel="nofollow"><img src="../../_static/images/view-page-source-icon.svg"></a>
+            <a href="../_sources/tutorials/data_fashion.rst.txt" rel="nofollow"><img src="../_static/images/view-page-source-icon.svg"></a>
           
         
       </li>
@@ -311,17 +316,13 @@
               
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-tutorials-media-tensordict-dataset-fashionmnist-py"><span class="std std-ref">here</span></a>
+<p>Click <a class="reference internal" href="#sphx-glr-download-tutorials-data-fashion-py"><span class="std std-ref">here</span></a>
 to download the full example code</p>
 </div>
-<p class="sphx-glr-example-title" id="sphx-glr-tutorials-media-tensordict-dataset-fashionmnist-py">tensordict-datasets.ipynb</p>
-<p>Automatically generated by Colaboratory.</p>
-<dl class="simple">
-<dt>Original file is located at</dt><dd><p><a class="reference external" href="https://colab.research.google.com/drive/1YnzyPma8Xw1KWok4lhMibk_zIomp4MP3">https://colab.research.google.com/drive/1YnzyPma8Xw1KWok4lhMibk_zIomp4MP3</a></p>
-</dd>
-</dl>
-<p># Using TensorDict for datasets</p>
-<p>In this tutorial we demonstrate how <cite>TensorDict</cite> can be used to efficiently and transparently load and manage data inside a training pipeline. The tutorial is based heavily on the [PyTorch Quickstart Tutorial](<a class="reference external" href="https://pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html">https://pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html</a>), but modified to demonstrate use of <cite>TensorDict</cite>.</p>
+<section class="sphx-glr-example-title" id="using-tensordict-for-datasets">
+<span id="sphx-glr-tutorials-data-fashion-py"></span><h1>Using TensorDict for datasets<a class="headerlink" href="#using-tensordict-for-datasets" title="Permalink to this heading">¶</a></h1>
+<p>In this tutorial we demonstrate how <cite>TensorDict</cite> can be used to efficiently
+and transparently load and manage data inside a training pipeline. The tutorial is based heavily on the [PyTorch Quickstart Tutorial](<a class="reference external" href="https://pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html">https://pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html</a>), but modified to demonstrate use of <cite>TensorDict</cite>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
 <span class="kn">from</span> <span class="nn">tensordict</span> <span class="kn">import</span> <span class="n">MemmapTensor</span><span class="p">,</span> <a href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping" title="collections.abc.Mapping" class="sphx-glr-backref-module-collections-abc sphx-glr-backref-type-py-class"><span class="n">TensorDict</span></a>
@@ -1352,7 +1353,7 @@ This takes a bit of time, but performing the transforms up-front will save repea
 </pre></div>
 </div>
 <section id="dataloaders">
-<h1>DataLoaders<a class="headerlink" href="#dataloaders" title="Permalink to this heading">¶</a></h1>
+<h2>DataLoaders<a class="headerlink" href="#dataloaders" title="Permalink to this heading">¶</a></h2>
 <p>We’ll create DataLoaders from the <cite>torchvision</cite>-provided Datasets, as well as from our memory-mapped TensorDicts.</p>
 <p>Since <cite>TensorDict</cite> implements <cite>__len__</cite> and <cite>__getitem__</cite> (and also <cite>__getitems__</cite>) we can use it like a map-style Dataset and create a <cite>DataLoader</cite> directly from it. Note that because <cite>TensorDict</cite> can already handle batched indices, there is no need for collation, so we pass the identity function as <cite>collate_fn</cite>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">batch_size</span></a> <span class="o">=</span> <span class="mi">64</span>
@@ -1370,7 +1371,7 @@ This takes a bit of time, but performing the transforms up-front will save repea
 </div>
 </section>
 <section id="model">
-<h1>Model<a class="headerlink" href="#model" title="Permalink to this heading">¶</a></h1>
+<h2>Model<a class="headerlink" href="#model" title="Permalink to this heading">¶</a></h2>
 <p>We use the same model from the [Quickstart Tutorial](<a class="reference external" href="https://pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html">https://pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html</a>).</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Net</span><span class="p">(</span><a href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="torch.nn.Module" class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class"><span class="n">nn</span><span class="o">.</span><span class="n">Module</span></a><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1418,7 +1419,7 @@ This takes a bit of time, but performing the transforms up-front will save repea
 </div>
 </section>
 <section id="optimizing-the-parameters">
-<h1>Optimizing the parameters<a class="headerlink" href="#optimizing-the-parameters" title="Permalink to this heading">¶</a></h1>
+<h2>Optimizing the parameters<a class="headerlink" href="#optimizing-the-parameters" title="Permalink to this heading">¶</a></h2>
 <p>We’ll optimise the parameters of the model using stochastic gradient descent and cross-entropy loss.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html#torch.nn.CrossEntropyLoss" title="torch.nn.CrossEntropyLoss" class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">loss_fn</span></a> <span class="o">=</span> <a href="https://pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html#torch.nn.CrossEntropyLoss" title="torch.nn.CrossEntropyLoss" class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-class"><span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span></a><span class="p">()</span>
 <a href="https://pytorch.org/docs/stable/generated/torch.optim.SGD.html#torch.optim.SGD" title="torch.optim.SGD" class="sphx-glr-backref-module-torch-optim sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">optimizer</span></a> <span class="o">=</span> <a href="https://pytorch.org/docs/stable/generated/torch.optim.SGD.html#torch.optim.SGD" title="torch.optim.SGD" class="sphx-glr-backref-module-torch-optim sphx-glr-backref-type-py-class"><span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span></a><span class="p">(</span><a href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module.parameters" title="torch.nn.Module.parameters" class="sphx-glr-backref-module-torch-nn sphx-glr-backref-type-py-method"><span class="n">model</span><span class="o">.</span><span class="n">parameters</span></a><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
@@ -1547,168 +1548,169 @@ This takes a bit of time, but performing the transforms up-front will save repea
     is_shared=False)
 Epoch 1
 -------------------------
-loss: 2.313078 [    0/60000]
-loss: 2.295903 [ 6400/60000]
-loss: 2.281187 [12800/60000]
-loss: 2.267138 [19200/60000]
-loss: 2.259097 [25600/60000]
-loss: 2.224411 [32000/60000]
-loss: 2.234133 [38400/60000]
-loss: 2.204109 [44800/60000]
-loss: 2.199115 [51200/60000]
-loss: 2.167895 [57600/60000]
+loss: 2.300742 [    0/60000]
+loss: 2.291977 [ 6400/60000]
+loss: 2.273601 [12800/60000]
+loss: 2.263329 [19200/60000]
+loss: 2.254715 [25600/60000]
+loss: 2.221566 [32000/60000]
+loss: 2.227604 [38400/60000]
+loss: 2.197457 [44800/60000]
+loss: 2.186788 [51200/60000]
+loss: 2.168710 [57600/60000]
 Test Error:
- Accuracy: 34.8%, Avg loss: 2.171334
+ Accuracy: 45.9%, Avg loss: 2.159327
 
 Epoch 2
 -------------------------
-loss: 2.186477 [    0/60000]
-loss: 2.174780 [ 6400/60000]
-loss: 2.125442 [12800/60000]
-loss: 2.133148 [19200/60000]
-loss: 2.099648 [25600/60000]
-loss: 2.032830 [32000/60000]
-loss: 2.059309 [38400/60000]
-loss: 1.989118 [44800/60000]
-loss: 1.990484 [51200/60000]
-loss: 1.924861 [57600/60000]
+loss: 2.163974 [    0/60000]
+loss: 2.157036 [ 6400/60000]
+loss: 2.104301 [12800/60000]
+loss: 2.116882 [19200/60000]
+loss: 2.071885 [25600/60000]
+loss: 2.007177 [32000/60000]
+loss: 2.030267 [38400/60000]
+loss: 1.959328 [44800/60000]
+loss: 1.953309 [51200/60000]
+loss: 1.891512 [57600/60000]
 Test Error:
- Accuracy: 56.8%, Avg loss: 1.933077
+ Accuracy: 59.8%, Avg loss: 1.887775
 
 Epoch 3
 -------------------------
-loss: 1.968034 [    0/60000]
-loss: 1.937450 [ 6400/60000]
-loss: 1.831355 [12800/60000]
-loss: 1.860060 [19200/60000]
-loss: 1.767217 [25600/60000]
-loss: 1.710223 [32000/60000]
-loss: 1.720926 [38400/60000]
-loss: 1.632814 [44800/60000]
-loss: 1.656898 [51200/60000]
-loss: 1.544701 [57600/60000]
+loss: 1.913903 [    0/60000]
+loss: 1.888768 [ 6400/60000]
+loss: 1.779645 [12800/60000]
+loss: 1.814827 [19200/60000]
+loss: 1.710622 [25600/60000]
+loss: 1.657114 [32000/60000]
+loss: 1.671695 [38400/60000]
+loss: 1.586414 [44800/60000]
+loss: 1.602691 [51200/60000]
+loss: 1.495726 [57600/60000]
 Test Error:
- Accuracy: 61.0%, Avg loss: 1.572448
+ Accuracy: 62.6%, Avg loss: 1.517826
 
 Epoch 4
 -------------------------
-loss: 1.645465 [    0/60000]
-loss: 1.599628 [ 6400/60000]
-loss: 1.456958 [12800/60000]
-loss: 1.517288 [19200/60000]
-loss: 1.406622 [25600/60000]
-loss: 1.392264 [32000/60000]
-loss: 1.391405 [38400/60000]
-loss: 1.326637 [44800/60000]
-loss: 1.368820 [51200/60000]
-loss: 1.250868 [57600/60000]
+loss: 1.579379 [    0/60000]
+loss: 1.551280 [ 6400/60000]
+loss: 1.407107 [12800/60000]
+loss: 1.472484 [19200/60000]
+loss: 1.358663 [25600/60000]
+loss: 1.344799 [32000/60000]
+loss: 1.355513 [38400/60000]
+loss: 1.295998 [44800/60000]
+loss: 1.326028 [51200/60000]
+loss: 1.217939 [57600/60000]
 Test Error:
- Accuracy: 63.5%, Avg loss: 1.289207
+ Accuracy: 63.6%, Avg loss: 1.251521
 
 Epoch 5
 -------------------------
-loss: 1.376889 [    0/60000]
-loss: 1.345603 [ 6400/60000]
-loss: 1.183983 [12800/60000]
-loss: 1.281469 [19200/60000]
-loss: 1.163286 [25600/60000]
-loss: 1.178587 [32000/60000]
-loss: 1.182424 [38400/60000]
-loss: 1.131405 [44800/60000]
-loss: 1.181844 [51200/60000]
-loss: 1.075786 [57600/60000]
+loss: 1.325037 [    0/60000]
+loss: 1.313899 [ 6400/60000]
+loss: 1.151550 [12800/60000]
+loss: 1.249752 [19200/60000]
+loss: 1.129967 [25600/60000]
+loss: 1.142426 [32000/60000]
+loss: 1.162742 [38400/60000]
+loss: 1.117407 [44800/60000]
+loss: 1.151005 [51200/60000]
+loss: 1.058642 [57600/60000]
 Test Error:
- Accuracy: 64.7%, Avg loss: 1.110288
+ Accuracy: 64.8%, Avg loss: 1.086430
 
-TensorDict training done! time:  14.4401 s
+TensorDict training done! time:  15.0074 s
 Epoch 1
 -------------------------
-loss: 2.300600 [    0/60000]
-loss: 2.291576 [ 6400/60000]
-loss: 2.274764 [12800/60000]
-loss: 2.274865 [19200/60000]
-loss: 2.267905 [25600/60000]
-loss: 2.227151 [32000/60000]
-loss: 2.233541 [38400/60000]
-loss: 2.198082 [44800/60000]
-loss: 2.192547 [51200/60000]
-loss: 2.174809 [57600/60000]
+loss: 2.295738 [    0/60000]
+loss: 2.289103 [ 6400/60000]
+loss: 2.270207 [12800/60000]
+loss: 2.268887 [19200/60000]
+loss: 2.252605 [25600/60000]
+loss: 2.212312 [32000/60000]
+loss: 2.223425 [38400/60000]
+loss: 2.183696 [44800/60000]
+loss: 2.186213 [51200/60000]
+loss: 2.149121 [57600/60000]
 Test Error:
- Accuracy: 40.2%, Avg loss: 2.160164
+ Accuracy: 44.8%, Avg loss: 2.145542
 
 Epoch 2
 -------------------------
-loss: 2.158504 [    0/60000]
-loss: 2.156648 [ 6400/60000]
-loss: 2.099359 [12800/60000]
-loss: 2.126779 [19200/60000]
-loss: 2.089545 [25600/60000]
-loss: 2.011259 [32000/60000]
-loss: 2.048107 [38400/60000]
-loss: 1.964152 [44800/60000]
-loss: 1.970080 [51200/60000]
-loss: 1.916523 [57600/60000]
+loss: 2.159655 [    0/60000]
+loss: 2.148947 [ 6400/60000]
+loss: 2.090307 [12800/60000]
+loss: 2.108796 [19200/60000]
+loss: 2.064512 [25600/60000]
+loss: 1.996323 [32000/60000]
+loss: 2.025931 [38400/60000]
+loss: 1.948112 [44800/60000]
+loss: 1.963798 [51200/60000]
+loss: 1.873289 [57600/60000]
 Test Error:
- Accuracy: 56.8%, Avg loss: 1.899874
+ Accuracy: 55.4%, Avg loss: 1.879860
 
 Epoch 3
 -------------------------
-loss: 1.917281 [    0/60000]
-loss: 1.896177 [ 6400/60000]
-loss: 1.781734 [12800/60000]
-loss: 1.838977 [19200/60000]
-loss: 1.736284 [25600/60000]
-loss: 1.671542 [32000/60000]
-loss: 1.705752 [38400/60000]
-loss: 1.599023 [44800/60000]
-loss: 1.627295 [51200/60000]
-loss: 1.534341 [57600/60000]
+loss: 1.919705 [    0/60000]
+loss: 1.883706 [ 6400/60000]
+loss: 1.772229 [12800/60000]
+loss: 1.809522 [19200/60000]
+loss: 1.695110 [25600/60000]
+loss: 1.656233 [32000/60000]
+loss: 1.669168 [38400/60000]
+loss: 1.575900 [44800/60000]
+loss: 1.610981 [51200/60000]
+loss: 1.483650 [57600/60000]
 Test Error:
- Accuracy: 62.3%, Avg loss: 1.535116
+ Accuracy: 60.1%, Avg loss: 1.508293
 
 Epoch 4
 -------------------------
-loss: 1.586319 [    0/60000]
-loss: 1.557386 [ 6400/60000]
-loss: 1.407414 [12800/60000]
-loss: 1.494676 [19200/60000]
-loss: 1.377747 [25600/60000]
-loss: 1.360846 [32000/60000]
-loss: 1.382613 [38400/60000]
-loss: 1.303750 [44800/60000]
-loss: 1.344579 [51200/60000]
-loss: 1.247963 [57600/60000]
+loss: 1.581215 [    0/60000]
+loss: 1.535510 [ 6400/60000]
+loss: 1.392727 [12800/60000]
+loss: 1.458520 [19200/60000]
+loss: 1.336489 [25600/60000]
+loss: 1.347554 [32000/60000]
+loss: 1.349113 [38400/60000]
+loss: 1.278052 [44800/60000]
+loss: 1.318529 [51200/60000]
+loss: 1.206392 [57600/60000]
 Test Error:
- Accuracy: 63.9%, Avg loss: 1.262638
+ Accuracy: 63.4%, Avg loss: 1.235365
 
 Epoch 5
 -------------------------
-loss: 1.326263 [    0/60000]
-loss: 1.313959 [ 6400/60000]
-loss: 1.148063 [12800/60000]
-loss: 1.263183 [19200/60000]
-loss: 1.143773 [25600/60000]
-loss: 1.157071 [32000/60000]
-loss: 1.181923 [38400/60000]
-loss: 1.118952 [44800/60000]
-loss: 1.165010 [51200/60000]
-loss: 1.080442 [57600/60000]
+loss: 1.314011 [    0/60000]
+loss: 1.287235 [ 6400/60000]
+loss: 1.126220 [12800/60000]
+loss: 1.231377 [19200/60000]
+loss: 1.109055 [25600/60000]
+loss: 1.145338 [32000/60000]
+loss: 1.157969 [38400/60000]
+loss: 1.094664 [44800/60000]
+loss: 1.138510 [51200/60000]
+loss: 1.050985 [57600/60000]
 Test Error:
- Accuracy: 64.9%, Avg loss: 1.091694
+ Accuracy: 65.0%, Avg loss: 1.070406
 
-Training done! time:  42.8951 s
+Training done! time:  43.1236 s
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  17.238 seconds)</p>
-<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-media-tensordict-dataset-fashionmnist-py">
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  16.642 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-data-fashion-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/8b51ba6074014edc8d277d4bd14b5a5e/tensordict_dataset_fashionmnist.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">tensordict_dataset_fashionmnist.py</span></code></a></p>
+<p><a class="reference download internal" download="" href="../_downloads/e87c2bc1479664c90c050249ea50d202/data_fashion.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">data_fashion.py</span></code></a></p>
 </div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/4b3ebe1f39c35c70f2b5ecd33b3dfb3f/tensordict_dataset_fashionmnist.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">tensordict_dataset_fashionmnist.ipynb</span></code></a></p>
+<p><a class="reference download internal" download="" href="../_downloads/e330622d5b746a093c669dc804b45baf/data_fashion.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">data_fashion.ipynb</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
 </section>
 
 
@@ -1716,6 +1718,15 @@ Training done! time:  42.8951 s
              
             </div>
             <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../overview.html" class="btn btn-neutral float-right" title="Overview" accesskey="n" rel="next">Next <img src="../_static/images/chevron-right-orange.svg" class="next-page"></a>
+      
+      
+        <a href="../index.html" class="btn btn-neutral" title="Welcome to the TensorDict Documentation!" accesskey="p" rel="prev"><img src="../_static/images/chevron-right-orange.svg" class="previous-page"> Previous</a>
+      
+    </div>
   
 
   
@@ -1745,9 +1756,12 @@ Training done! time:  42.8951 s
           <div class="pytorch-right-menu" id="pytorch-right-menu">
             <div class="pytorch-side-scroll" id="pytorch-side-scroll-right">
               <ul>
-<li><a class="reference internal" href="#">DataLoaders</a></li>
+<li><a class="reference internal" href="#">Using TensorDict for datasets</a><ul>
+<li><a class="reference internal" href="#dataloaders">DataLoaders</a></li>
 <li><a class="reference internal" href="#model">Model</a></li>
 <li><a class="reference internal" href="#optimizing-the-parameters">Optimizing the parameters</a></li>
+</ul>
+</li>
 </ul>
 
             </div>
@@ -1762,21 +1776,21 @@ Training done! time:  42.8951 s
   
 
      
-       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-         <script src="../../_static/jquery.js"></script>
-         <script src="../../_static/underscore.js"></script>
-         <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-         <script src="../../_static/doctools.js"></script>
-         <script src="../../_static/sphinx_highlight.js"></script>
+       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+         <script src="../_static/jquery.js"></script>
+         <script src="../_static/underscore.js"></script>
+         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+         <script src="../_static/doctools.js"></script>
+         <script src="../_static/sphinx_highlight.js"></script>
      
 
   
 
-  <script type="text/javascript" src="../../_static/js/vendor/popper.min.js"></script>
-  <script type="text/javascript" src="../../_static/js/vendor/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../_static/js/vendor/popper.min.js"></script>
+  <script type="text/javascript" src="../_static/js/vendor/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
 
   <script type="text/javascript">
       jQuery(function () {
@@ -1881,7 +1895,7 @@ Training done! time:  42.8951 s
   <div class="cookie-banner-wrapper">
   <div class="container">
     <p class="gdpr-notice">To analyze traffic and optimize your experience, we serve cookies on this site. By clicking or navigating, you agree to allow our usage of cookies. As the current maintainers of this site, Facebook’s Cookies Policy applies. Learn more, including about available controls: <a href="https://www.facebook.com/policies/cookies/">Cookies Policy</a>.</p>
-    <img class="close-button" src="../../_static/images/pytorch-x.svg">
+    <img class="close-button" src="../_static/images/pytorch-x.svg">
   </div>
 </div>
 
@@ -2017,7 +2031,7 @@ Training done! time:  42.8951 s
 
   <!-- End Mobile Menu -->
 
-  <script type="text/javascript" src="../../_static/js/vendor/anchor.min.js"></script>
+  <script type="text/javascript" src="../_static/js/vendor/anchor.min.js"></script>
 
   <script type="text/javascript">
     $(document).ready(function() {
