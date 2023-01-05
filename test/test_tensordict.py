@@ -677,6 +677,8 @@ class TestTensorDicts(TestTensorDictsBase):
         else:
             td = td.del_("a")
         assert td is not None
+        with pytest.raises(KeyError):
+            _ = td["a"]
         assert "a" not in td.keys()
 
     def test_set_unexisting(self, td_name, device):

@@ -672,7 +672,6 @@ class TensorDictBase(Mapping, metaclass=abc.ABCMeta):
         if input_dict_or_td is self:
             # no op
             return self
-        keys = set(self.keys(False))
         for key, value in input_dict_or_td.items():
             if clone and hasattr(value, "clone"):
                 value = value.clone()
@@ -681,7 +680,7 @@ class TensorDictBase(Mapping, metaclass=abc.ABCMeta):
             else:
                 subkey = []
             # the key must be a string by now. Let's check if it is present
-            if key in keys:
+            if key in self.keys():
                 target = self._get_meta(key)
                 if target.is_tensordict():
                     target = self.get(key)
@@ -786,7 +785,12 @@ class TensorDictBase(Mapping, metaclass=abc.ABCMeta):
         return torch.as_tensor(array, device=self.device)
 
     def _convert_to_tensordict(self, dict_value: Dict[str, Any]) -> TensorDictBase:
-        return TensorDict(dict_value, batch_size=self.batch_size, device=self.device)
+        return TensorDict(
+            dict_value,
+            batch_size=self.batch_size,
+            device=self.device,
+            _run_checks=False,
+        )
 
     def _process_input(
         self,
