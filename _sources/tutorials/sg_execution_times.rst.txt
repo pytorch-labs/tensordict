@@ -1,0 +1,14 @@
+
+:orphan:
+
+.. _sphx_glr_tutorials_sg_execution_times:
+
+Computation times
+=================
+**02:12.836** total execution time for **tutorials** files:
+
++-------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_tutorials_data_fashion.py` (``data_fashion.py``)               | 01:08.814 | 0.0 MB |
++-------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_tutorials_tensorclass_fashion.py` (``tensorclass_fashion.py``) | 01:04.022 | 0.0 MB |
++-------------------------------------------------------------------------------+-----------+--------+
