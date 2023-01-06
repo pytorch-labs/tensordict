@@ -5,8 +5,8 @@
 
 Computation times
 =================
-**01:16.642** total execution time for **tutorials** files:
+**01:23.633** total execution time for **tutorials** files:
 
 +-----------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_tutorials_data_fashion.py` (``data_fashion.py``) | 01:16.642 | 0.0 MB |
+| :ref:`sphx_glr_tutorials_data_fashion.py` (``data_fashion.py``) | 01:23.633 | 0.0 MB |
 +-----------------------------------------------------------------+-----------+--------+
