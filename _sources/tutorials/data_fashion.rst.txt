@@ -21,12 +21,15 @@
 Using TensorDict for datasets
 =============================
 
-.. GENERATED FROM PYTHON SOURCE LINES 9-11
+.. GENERATED FROM PYTHON SOURCE LINES 9-14
 
-In this tutorial we demonstrate how `TensorDict` can be used to efficiently
-and transparently load and manage data inside a training pipeline. The tutorial is based heavily on the [PyTorch Quickstart Tutorial](https://pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html), but modified to demonstrate use of `TensorDict`.
+In this tutorial we demonstrate how ``TensorDict`` can be used to
+efficiently and transparently load and manage data inside a training
+pipeline. The tutorial is based heavily on the `PyTorch Quickstart
+Tutorial <https://pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html>`__,
+but modified to demonstrate use of ``TensorDict``.
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-24
+.. GENERATED FROM PYTHON SOURCE LINES 14-27
 
 .. code-block:: default
 
@@ -56,11 +59,14 @@ and transparently load and manage data inside a training pipeline. The tutorial 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-26
+.. GENERATED FROM PYTHON SOURCE LINES 28-32
 
-The `torchvision.datasets` module contains a number of convenient pre-prepared datasets. In this tutorial we'll use the relatively simple FashionMNIST dataset. Each image is an item of clothing, the objective is to classify the type of clothing in the image (e.g. "Bag", "Sneaker" etc.)."""
+The ``torchvision.datasets`` module contains a number of convenient pre-prepared
+datasets. In this tutorial we'll use the relatively simple FashionMNIST dataset. Each
+image is an item of clothing, the objective is to classify the type of clothing in
+the image (e.g. "Bag", "Sneaker" etc.).
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-40
+.. GENERATED FROM PYTHON SOURCE LINES 32-46
 
 .. code-block:: default
 
@@ -110,16 +116,19 @@ The `torchvision.datasets` module contains a number of convenient pre-prepared d
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-45
+.. GENERATED FROM PYTHON SOURCE LINES 47-53
 
-We will create two tensordicts, one each for the training and test data. We create memory-mapped tensors to hold the data. This will allow us to efficiently load batches of transformed data from disk rather than repeatedly load and transform individual images.
+We will create two tensordicts, one each for the training and test data. We create
+memory-mapped tensors to hold the data. This will allow us to efficiently load
+batches of transformed data from disk rather than repeatedly load and transform
+individual images.
 
-First we create the `MemmapTensor` containers.
+First we create the ``MemmapTensor`` containers.
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 45-69
+.. GENERATED FROM PYTHON SOURCE LINES 53-78
 
 .. code-block:: default
+
 
 
     training_data_td = TensorDict(
@@ -152,13 +161,13 @@ First we create the `MemmapTensor` containers.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-73
+.. GENERATED FROM PYTHON SOURCE LINES 79-82
 
-Then we can iterate over the data to populate the memory-mapped tensors.
-This takes a bit of time, but performing the transforms up-front will save repeated effort during training later.
+Then we can iterate over the data to populate the memory-mapped tensors. This takes a
+bit of time, but performing the transforms up-front will save repeated effort during
+training later.
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 73-80
+.. GENERATED FROM PYTHON SOURCE LINES 82-89
 
 .. code-block:: default
 
@@ -176,17 +185,20 @@ This takes a bit of time, but performing the transforms up-front will save repea
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-88
+.. GENERATED FROM PYTHON SOURCE LINES 90-100
 
 DataLoaders
 ----------------
 
-We'll create DataLoaders from the `torchvision`-provided Datasets, as well as from our memory-mapped TensorDicts.
+We'll create DataLoaders from the ``torchvision``-provided Datasets, as well as from
+our memory-mapped TensorDicts.
 
-Since `TensorDict` implements `__len__` and `__getitem__` (and also `__getitems__`) we can use it like a map-style Dataset and create a `DataLoader` directly from it. Note that because `TensorDict` can already handle batched indices, there is no need for collation, so we pass the identity function as `collate_fn`.
+Since ``TensorDict`` implements ``__len__`` and ``__getitem__`` (and also
+``__getitems__``) we can use it like a map-style Dataset and create a ``DataLoader``
+directly from it. Note that because ``TensorDict`` can already handle batched indices,
+there is no need for collation, so we pass the identity function as ``collate_fn``.
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 88-101
+.. GENERATED FROM PYTHON SOURCE LINES 100-113
 
 .. code-block:: default
 
@@ -210,15 +222,16 @@ Since `TensorDict` implements `__len__` and `__getitem__` (and also `__getitems_
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-107
+.. GENERATED FROM PYTHON SOURCE LINES 114-120
 
 Model
 -------
 
-We use the same model from the [Quickstart Tutorial](https://pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html).
+We use the same model from the
+`Quickstart Tutorial <https://pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html>`__.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 107-131
+.. GENERATED FROM PYTHON SOURCE LINES 120-144
 
 .. code-block:: default
 
@@ -277,15 +290,16 @@ We use the same model from the [Quickstart Tutorial](https://pytorch.org/tutoria
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 132-137
+.. GENERATED FROM PYTHON SOURCE LINES 145-151
 
 Optimizing the parameters
 ---------------------------------
 
-We'll optimise the parameters of the model using stochastic gradient descent and cross-entropy loss.
+We'll optimise the parameters of the model using stochastic gradient descent and
+cross-entropy loss.
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 137-162
+.. GENERATED FROM PYTHON SOURCE LINES 151-176
 
 .. code-block:: default
 
@@ -321,21 +335,13 @@ We'll optimise the parameters of the model using stochastic gradient descent and
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-174
+.. GENERATED FROM PYTHON SOURCE LINES 177-180
 
-The training loop for our `TensorDict`-based DataLoader is very similar, we just adjust how we unpack the data to the more explicit key-based retrieval offered by `TensorDict`.
+The training loop for our ``TensorDict``-based DataLoader is very similar, we just
+adjust how we unpack the data to the more explicit key-based retrieval offered by
+``TensorDict``. The ``.contiguous()`` method loads the data stored in the memmap tensor.
 
-```diff
-- for batch, (X, y) in enumerate(dataloader):
--     X, y = X.to(device), y.to(device)
-+ for batch, data in enumerate(dataloader):
-+     X, y = data["images"].contiguous(), data["targets"].contiguous()
-```
-
-The `.contiguous()` method loads the data stored in the memmap tensor.
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 174-260
+.. GENERATED FROM PYTHON SOURCE LINES 180-266
 
 .. code-block:: default
 
@@ -442,156 +448,156 @@ The `.contiguous()` method loads the data stored in the memmap tensor.
         is_shared=False)
     Epoch 1
     -------------------------
-    loss: 2.314864 [    0/60000]
-    loss: 2.302577 [ 6400/60000]
-    loss: 2.281697 [12800/60000]
-    loss: 2.269954 [19200/60000]
-    loss: 2.255912 [25600/60000]
-    loss: 2.229342 [32000/60000]
-    loss: 2.234380 [38400/60000]
-    loss: 2.205913 [44800/60000]
-    loss: 2.208101 [51200/60000]
-    loss: 2.172907 [57600/60000]
+    loss: 2.303584 [    0/60000]
+    loss: 2.291382 [ 6400/60000]
+    loss: 2.270396 [12800/60000]
+    loss: 2.265401 [19200/60000]
+    loss: 2.250066 [25600/60000]
+    loss: 2.226218 [32000/60000]
+    loss: 2.226113 [38400/60000]
+    loss: 2.200067 [44800/60000]
+    loss: 2.196561 [51200/60000]
+    loss: 2.156809 [57600/60000]
     Test Error: 
-     Accuracy: 41.3%, Avg loss: 2.163655 
+     Accuracy: 56.9%, Avg loss: 2.156106 
 
     Epoch 2
     -------------------------
-    loss: 2.177125 [    0/60000]
-    loss: 2.171986 [ 6400/60000]
-    loss: 2.112398 [12800/60000]
-    loss: 2.123462 [19200/60000]
-    loss: 2.081384 [25600/60000]
-    loss: 2.027574 [32000/60000]
-    loss: 2.049011 [38400/60000]
-    loss: 1.981312 [44800/60000]
-    loss: 1.987601 [51200/60000]
-    loss: 1.917892 [57600/60000]
+    loss: 2.162167 [    0/60000]
+    loss: 2.156567 [ 6400/60000]
+    loss: 2.100287 [12800/60000]
+    loss: 2.119954 [19200/60000]
+    loss: 2.068600 [25600/60000]
+    loss: 2.008493 [32000/60000]
+    loss: 2.032886 [38400/60000]
+    loss: 1.959758 [44800/60000]
+    loss: 1.960780 [51200/60000]
+    loss: 1.884906 [57600/60000]
     Test Error: 
-     Accuracy: 58.3%, Avg loss: 1.909830 
+     Accuracy: 58.8%, Avg loss: 1.888735 
 
     Epoch 3
     -------------------------
-    loss: 1.940169 [    0/60000]
-    loss: 1.920193 [ 6400/60000]
-    loss: 1.797784 [12800/60000]
-    loss: 1.833807 [19200/60000]
-    loss: 1.735962 [25600/60000]
-    loss: 1.687150 [32000/60000]
-    loss: 1.702281 [38400/60000]
-    loss: 1.609628 [44800/60000]
-    loss: 1.634443 [51200/60000]
-    loss: 1.525304 [57600/60000]
+    loss: 1.912175 [    0/60000]
+    loss: 1.892560 [ 6400/60000]
+    loss: 1.776199 [12800/60000]
+    loss: 1.821670 [19200/60000]
+    loss: 1.710900 [25600/60000]
+    loss: 1.653524 [32000/60000]
+    loss: 1.678001 [38400/60000]
+    loss: 1.581832 [44800/60000]
+    loss: 1.602914 [51200/60000]
+    loss: 1.495260 [57600/60000]
     Test Error: 
-     Accuracy: 60.3%, Avg loss: 1.536007 
+     Accuracy: 60.9%, Avg loss: 1.517868 
 
     Epoch 4
     -------------------------
-    loss: 1.601889 [    0/60000]
-    loss: 1.572531 [ 6400/60000]
-    loss: 1.410467 [12800/60000]
-    loss: 1.479847 [19200/60000]
-    loss: 1.366628 [25600/60000]
-    loss: 1.365806 [32000/60000]
-    loss: 1.372030 [38400/60000]
-    loss: 1.301982 [44800/60000]
-    loss: 1.337635 [51200/60000]
-    loss: 1.232177 [57600/60000]
+    loss: 1.575616 [    0/60000]
+    loss: 1.552959 [ 6400/60000]
+    loss: 1.400419 [12800/60000]
+    loss: 1.479685 [19200/60000]
+    loss: 1.360397 [25600/60000]
+    loss: 1.343087 [32000/60000]
+    loss: 1.367332 [38400/60000]
+    loss: 1.287984 [44800/60000]
+    loss: 1.324468 [51200/60000]
+    loss: 1.224424 [57600/60000]
     Test Error: 
-     Accuracy: 62.7%, Avg loss: 1.256453 
+     Accuracy: 63.3%, Avg loss: 1.251100 
 
     Epoch 5
     -------------------------
-    loss: 1.333424 [    0/60000]
-    loss: 1.322170 [ 6400/60000]
-    loss: 1.145510 [12800/60000]
-    loss: 1.249721 [19200/60000]
-    loss: 1.131735 [25600/60000]
-    loss: 1.164149 [32000/60000]
-    loss: 1.173938 [38400/60000]
-    loss: 1.119625 [44800/60000]
-    loss: 1.155619 [51200/60000]
-    loss: 1.070122 [57600/60000]
+    loss: 1.320829 [    0/60000]
+    loss: 1.314322 [ 6400/60000]
+    loss: 1.142842 [12800/60000]
+    loss: 1.257416 [19200/60000]
+    loss: 1.133903 [25600/60000]
+    loss: 1.143080 [32000/60000]
+    loss: 1.176813 [38400/60000]
+    loss: 1.105158 [44800/60000]
+    loss: 1.148491 [51200/60000]
+    loss: 1.064116 [57600/60000]
     Test Error: 
-     Accuracy: 64.3%, Avg loss: 1.089847 
+     Accuracy: 65.0%, Avg loss: 1.084982 
 
-    TensorDict training done! time:  13.1420 s
+    TensorDict training done! time:  13.1661 s
     Epoch 1
     -------------------------
-    loss: 2.327462 [    0/60000]
-    loss: 2.311847 [ 6400/60000]
-    loss: 2.296333 [12800/60000]
-    loss: 2.275291 [19200/60000]
-    loss: 2.261527 [25600/60000]
-    loss: 2.245895 [32000/60000]
-    loss: 2.246055 [38400/60000]
-    loss: 2.234680 [44800/60000]
-    loss: 2.234793 [51200/60000]
-    loss: 2.188099 [57600/60000]
+    loss: 2.305735 [    0/60000]
+    loss: 2.292175 [ 6400/60000]
+    loss: 2.276465 [12800/60000]
+    loss: 2.269908 [19200/60000]
+    loss: 2.243026 [25600/60000]
+    loss: 2.219779 [32000/60000]
+    loss: 2.230284 [38400/60000]
+    loss: 2.196707 [44800/60000]
+    loss: 2.201938 [51200/60000]
+    loss: 2.152555 [57600/60000]
     Test Error: 
-     Accuracy: 49.2%, Avg loss: 2.193002 
+     Accuracy: 44.1%, Avg loss: 2.153360 
 
     Epoch 2
     -------------------------
-    loss: 2.213544 [    0/60000]
-    loss: 2.205397 [ 6400/60000]
-    loss: 2.159635 [12800/60000]
-    loss: 2.159997 [19200/60000]
-    loss: 2.130476 [25600/60000]
-    loss: 2.078938 [32000/60000]
-    loss: 2.103598 [38400/60000]
-    loss: 2.053555 [44800/60000]
-    loss: 2.055754 [51200/60000]
-    loss: 1.986193 [57600/60000]
+    loss: 2.174907 [    0/60000]
+    loss: 2.153797 [ 6400/60000]
+    loss: 2.100919 [12800/60000]
+    loss: 2.105266 [19200/60000]
+    loss: 2.047655 [25600/60000]
+    loss: 2.000163 [32000/60000]
+    loss: 2.018755 [38400/60000]
+    loss: 1.945116 [44800/60000]
+    loss: 1.951925 [51200/60000]
+    loss: 1.854682 [57600/60000]
     Test Error: 
-     Accuracy: 58.8%, Avg loss: 1.987073 
+     Accuracy: 56.7%, Avg loss: 1.868198 
 
     Epoch 3
     -------------------------
-    loss: 2.019083 [    0/60000]
-    loss: 1.998723 [ 6400/60000]
-    loss: 1.898703 [12800/60000]
-    loss: 1.921299 [19200/60000]
-    loss: 1.844963 [25600/60000]
-    loss: 1.776341 [32000/60000]
-    loss: 1.802309 [38400/60000]
-    loss: 1.712511 [44800/60000]
-    loss: 1.724295 [51200/60000]
-    loss: 1.621764 [57600/60000]
+    loss: 1.916375 [    0/60000]
+    loss: 1.870276 [ 6400/60000]
+    loss: 1.759918 [12800/60000]
+    loss: 1.781833 [19200/60000]
+    loss: 1.681779 [25600/60000]
+    loss: 1.641682 [32000/60000]
+    loss: 1.649910 [38400/60000]
+    loss: 1.568124 [44800/60000]
+    loss: 1.589286 [51200/60000]
+    loss: 1.464348 [57600/60000]
     Test Error: 
-     Accuracy: 62.1%, Avg loss: 1.632934 
+     Accuracy: 62.1%, Avg loss: 1.501341 
 
     Epoch 4
     -------------------------
-    loss: 1.691475 [    0/60000]
-    loss: 1.656376 [ 6400/60000]
-    loss: 1.506708 [12800/60000]
-    loss: 1.567175 [19200/60000]
-    loss: 1.462773 [25600/60000]
-    loss: 1.429891 [32000/60000]
-    loss: 1.450165 [38400/60000]
-    loss: 1.373469 [44800/60000]
-    loss: 1.404268 [51200/60000]
-    loss: 1.299473 [57600/60000]
+    loss: 1.577442 [    0/60000]
+    loss: 1.531819 [ 6400/60000]
+    loss: 1.390960 [12800/60000]
+    loss: 1.445716 [19200/60000]
+    loss: 1.342882 [25600/60000]
+    loss: 1.337004 [32000/60000]
+    loss: 1.344187 [38400/60000]
+    loss: 1.287900 [44800/60000]
+    loss: 1.317498 [51200/60000]
+    loss: 1.202354 [57600/60000]
     Test Error: 
-     Accuracy: 63.2%, Avg loss: 1.323860 
+     Accuracy: 63.9%, Avg loss: 1.242324 
 
     Epoch 5
     -------------------------
-    loss: 1.400511 [    0/60000]
-    loss: 1.376559 [ 6400/60000]
-    loss: 1.210885 [12800/60000]
-    loss: 1.304865 [19200/60000]
-    loss: 1.191555 [25600/60000]
-    loss: 1.199082 [32000/60000]
-    loss: 1.223210 [38400/60000]
-    loss: 1.163178 [44800/60000]
-    loss: 1.197385 [51200/60000]
-    loss: 1.111060 [57600/60000]
+    loss: 1.322809 [    0/60000]
+    loss: 1.295974 [ 6400/60000]
+    loss: 1.137960 [12800/60000]
+    loss: 1.230530 [19200/60000]
+    loss: 1.117373 [25600/60000]
+    loss: 1.136087 [32000/60000]
+    loss: 1.155337 [38400/60000]
+    loss: 1.110600 [44800/60000]
+    loss: 1.146272 [51200/60000]
+    loss: 1.046213 [57600/60000]
     Test Error: 
-     Accuracy: 64.5%, Avg loss: 1.130494 
+     Accuracy: 65.1%, Avg loss: 1.079461 
 
-    Training done! time:  36.7675 s
+    Training done! time:  36.8047 s
 
 
 
@@ -599,7 +605,7 @@ The `.contiguous()` method loads the data stored in the memmap tensor.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  6.258 seconds)
+   **Total running time of the script:** ( 1 minutes  7.232 seconds)
 
 
 .. _sphx_glr_download_tutorials_data_fashion.py:

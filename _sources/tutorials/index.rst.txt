@@ -29,6 +29,23 @@ README Tutos
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Using tensorclasses for datasets">
+
+.. only:: html
+
+  .. image:: /tutorials/images/thumb/sphx_glr_tensorclass_fashion_thumb.png
+    :alt: Using tensorclasses for datasets
+
+  :ref:`sphx_glr_tutorials_tensorclass_fashion.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Using tensorclasses for datasets</div>
+    </div>
+
+
+.. raw:: html
+
     </div>
 
 
@@ -36,6 +53,7 @@ README Tutos
    :hidden:
 
    /tutorials/data_fashion
+   /tutorials/tensorclass_fashion
 
 
 .. only:: html
