@@ -213,7 +213,17 @@
         <div class="pytorch-menu pytorch-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           <div class="pytorch-left-menu-search">
             
-    
+
+            
+              
+              
+                <div class="version">
+                  main (0.0.1c+13ea707 )
+                </div>
+              
+            
+
+            
 
 
   
@@ -227,6 +237,7 @@
   </form>
 </div>
 
+            
           </div>
 
           
@@ -308,6 +319,27 @@
 
       <section data-toggle="wy-nav-shift" id="pytorch-content-wrap" class="pytorch-content-wrap">
         <div class="pytorch-content-left">
+
+          
+          <div class="pytorch-call-to-action-links">
+            <div id="tutorial-type">tutorials/tensorclass_imagenet</div>
+
+            <div id="google-colab-link">
+              <img class="call-to-action-img" src="../_static/images/pytorch-colab.svg"/>
+              <div class="call-to-action-desktop-view">Run in Google Colab</div>
+              <div class="call-to-action-mobile-view">Colab</div>
+            </div>
+            <div id="download-notebook-link">
+              <img class="call-to-action-notebook-img" src="../_static/images/pytorch-download.svg"/>
+              <div class="call-to-action-desktop-view">Download Notebook</div>
+              <div class="call-to-action-mobile-view">Notebook</div>
+            </div>
+            <div id="github-view-link">
+              <img class="call-to-action-img" src="../_static/images/pytorch-github.svg"/>
+              <div class="call-to-action-desktop-view">View on GitHub</div>
+              <div class="call-to-action-mobile-view">GitHub</div>
+            </div>
+          </div>
 
         
           
@@ -484,7 +516,7 @@ applies the transform sequentially and then stacks the results.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;One iteration over dataloader done! Time: </span><span class="si">{</span><a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">t0</span></a><span class="si">:</span><span class="s2">4.4f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>One iteration over dataloader done! Time: 1.0984s
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>One iteration over dataloader done! Time: 1.0590s
 </pre></div>
 </div>
 <p>Our tensorclass-based dataloader instead loads data from the
@@ -499,7 +531,7 @@ transformations to the batched images.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;One iteration over tensorclass dataloader done! Time: </span><span class="si">{</span><a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">t0</span></a><span class="si">:</span><span class="s2">4.4f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>One iteration over tensorclass dataloader done! Time: 0.3847s
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>One iteration over tensorclass dataloader done! Time: 0.3086s
 </pre></div>
 </div>
 <p>In the case of the validation set, we see an even bigger performance
@@ -517,11 +549,11 @@ need for additional transformations as we load from disk.</p>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;One iteration over tensorclass val data. Time: </span><span class="si">{</span><a href="https://docs.python.org/3/library/time.html#time.time" title="time.time" class="sphx-glr-backref-module-time sphx-glr-backref-type-py-function"><span class="n">time</span><span class="o">.</span><span class="n">time</span></a><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">t0</span></a><span class="si">:</span><span class="s2">4.4f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>One iteration over val data. Time: 0.8714s
-One iteration over tensorclass val data. Time: 0.0340s
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>One iteration over val data. Time: 0.8609s
+One iteration over tensorclass val data. Time: 0.0253s
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.938 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.769 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-tutorials-tensorclass-imagenet-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/15e3378cb4356a25ae780439b1e18899/tensorclass_imagenet.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">tensorclass_imagenet.py</span></code></a></p>
@@ -679,7 +711,7 @@ One iteration over tensorclass val data. Time: 0.0340s
             <li><a href="https://twitter.com/pytorch" target="_blank">Twitter</a></li>
             <li><a href="https://www.youtube.com/pytorch" target="_blank">YouTube</a></li>
             <li><a href="https://www.linkedin.com/company/pytorch" target="_blank">LinkedIn</a></li>
-          </ul>  
+          </ul>
           </div>
 
         <div class="footer-links-col">
@@ -692,7 +724,7 @@ One iteration over tensorclass val data. Time: 0.0340s
           </ul>
          </div>
         </div>
-        
+
         <div class="privacy-policy">
           <ul>
             <li class="privacy-policy-links"><a href="https://www.linuxfoundation.org/terms/" target="_blank">Terms</a></li>
@@ -742,7 +774,7 @@ One iteration over tensorclass val data. Time: 0.0340s
           <li>
             <a href="https://pytorch.org/ecosystem">Ecosystem</a>
           </li>
-            
+
           <li>
             <a href="https://pytorch.org/mobile">Mobile</a>
           </li>
@@ -804,7 +836,7 @@ One iteration over tensorclass val data. Time: 0.0340s
           <li class="resources-mobile-menu-title">
             Resources
           </li>
-            
+
            <ul class="resources-mobile-menu-items">
 
             <li>
