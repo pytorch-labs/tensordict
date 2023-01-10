@@ -218,7 +218,7 @@
               
               
                 <div class="version">
-                  main (0.0.1c+13ea707 )
+                  main (0.0.1c+d1d753d )
                 </div>
               
             
@@ -518,14 +518,14 @@
 <p>A key pain-point of multiple PyTorch users is the inability of nn.Sequential to handle modules with multiple inputs. Working with key-based graphs can easily solve that problem as each node in the sequence knows what data needs to be read and where to write it.</p>
 <p>For this purpose, we provide the <code class="docutils literal notranslate"><span class="pre">TensorDictSequential</span></code> class which passes data through a sequence of <code class="docutils literal notranslate"><span class="pre">TensorDictModules</span></code>. Each module in the sequence takes its input from, and writes its output to the original <code class="docutils literal notranslate"><span class="pre">TensorDict</span></code>, meaning it’s possible for modules in the sequence to ignore output from their predecessors, or take additional input from the tensordict as necessary. Here’s an example.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Net</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<span class="gp">... </span>   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">hidden_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
-<span class="gp">... </span>       <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-<span class="gp">... </span>       <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">)</span>
-<span class="gp">... </span>       <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">output_size</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">hidden_size</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">output_size</span><span class="p">)</span>
 <span class="gp">...</span>
-<span class="gp">... </span>   <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-<span class="gp">... </span>       <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-<span class="gp">... </span>       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="gp">...</span>
 <span class="gp">... </span><span class="k">class</span> <span class="nc">Masker</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mask</span><span class="p">):</span>
@@ -550,7 +550,7 @@
 <span class="gp">... </span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tensordict</span> <span class="o">=</span> <span class="n">module</span><span class="p">(</span><span class="n">tensordict</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">intermediate_x</span> <span class="o">=</span> <span class="n">tensordict</span><span class="p">[</span><span class="s2">&quot;intermediate&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">probabilities</span> <span class="o">=</span> <span class="n">tensordict</span><span class="p">[</span><span class="s2">&quot;outputs&quot;</span><span class="p">,</span> <span class="s2">&quot;probabilities&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">probabilities</span> <span class="o">=</span> <span class="n">tensordict</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">,</span> <span class="s2">&quot;probabilities&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>In this example, the second module combines the output of the first with the mask stored under (“inputs”, “mask”) in the <code class="docutils literal notranslate"><span class="pre">TensorDict</span></code>.</p>
